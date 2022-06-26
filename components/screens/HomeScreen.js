@@ -99,7 +99,7 @@ export default function HomeScreen() {
     <View style={styles.container}>
       <Text style={[commonStyles.heading, { marginTop: 50 }]}>Pokédex</Text>
       <Text style={commonStyles.subHeading}>
-        Search for a Pokémon by name {'\n'} to view its strenghts and
+        Search for a Pokémon by name {'\n'} to view its strengths and
         weaknesses.
       </Text>
       <View style={styles.searchContainer}>
@@ -150,7 +150,6 @@ export default function HomeScreen() {
       ) : (
         <Text></Text>
       )}
-      <Text style={commonStyles.footer}>Powered by Pokédex API</Text>
     </View>
   )
 }

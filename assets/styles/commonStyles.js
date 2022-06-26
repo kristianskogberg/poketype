@@ -47,7 +47,6 @@ export default StyleSheet.create({
     color: textColor.grey,
     justifyContent: 'center',
     textAlign: 'center',
-    //position: 'absolute',
     marginBottom: 14,
   },
 })
