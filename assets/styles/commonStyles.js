@@ -24,7 +24,7 @@ export default StyleSheet.create({
     fontSize: 16,
     padding: 5,
     color: textColor.grey,
-    justifyContent: 'center',
+    alignItems: 'center',
     textAlign: 'center',
   },
   textInput: {

@@ -4,7 +4,7 @@ import commonStyles from '../assets/styles/commonStyles'
 import RNFadedScrollView from 'rn-faded-scrollview'
 import ScrollViewIndicator from 'react-native-scroll-indicator'
 
-import Icon from '../components/typeIcon'
+import Icon from './typeIcon'
 import { Line } from 'react-native-svg'
 
 import { LinearGradient } from 'expo-linear-gradient'

@@ -31,7 +31,6 @@ const TypeCalc = (props) => {
   ]
   const _ = 1
   const H = 1 / 2
-
   const typeTable = [
     [_, _, _, _, _, _, _, _, _, _, _, _, H, 0, _, _, H, _],
     [_, H, H, _, 2, 2, _, _, _, _, _, 2, H, _, H, _, 2, _],
@@ -53,26 +52,16 @@ const TypeCalc = (props) => {
     [_, H, _, _, _, _, 2, H, _, _, _, _, _, _, 2, 2, H, _],
   ]
 
-  let typeIndex
-  let dualType
-  let typeIndexSec
   let vulnerableArray = []
-  let vulnerableArraySec = []
-  let vulnerableArrayFinal = []
-
   let resistanceArray = []
-  let resistanceArraySec = []
-  let resistanceArrayFinal = []
-
   let strongAgainstArray = []
-  let strongAgainstArraySec = []
-  let strongAgainstArrayFinal = []
-
   let weakAgainstArray = []
-  let weakAgainstArraySec = []
-  let weakAgainstArrayFinal = []
 
   const createTypeArrays = (typeArray) => {
+    let typeIndex
+    let typeIndexSec
+    let dualType
+
     typeArray.forEach((type, index) => {
       if (index == 0) {
         typeIndex = typesInOrder.indexOf(type)
@@ -81,99 +70,61 @@ const TypeCalc = (props) => {
         dualType = true
       }
     })
+    let typeA = typeTable[typeIndex]
+    let typeB = []
+    let typeAFlip = []
+    let typeBFlip = []
 
     for (let i = 0; i < typeTable.length; i++) {
-      //resistant to: console.log(typeTable[typeIndex][i])
-      if (typeTable[i][typeIndex] == 2) {
-        vulnerableArray.push(typesInOrder[i])
-      }
-      if (typeTable[i][typeIndex] == H || typeTable[i][typeIndex] == 0) {
-        resistanceArray.push(typesInOrder[i])
-        //console.log(typesInOrder[i])
-      }
-      if (typeTable[typeIndex][i] == 2) {
-        strongAgainstArray.push(typesInOrder[i])
-        //console.log(typesInOrder[i])
-      }
-      if (typeTable[typeIndex][i] == H || typeTable[typeIndex][i] == 0) {
-        weakAgainstArray.push(typesInOrder[i])
+      typeAFlip.push(typeTable[i][typeIndex])
+    }
 
-        //console.log(typesInOrder[i])
+    for (let i = 0; i < typeA.length; i++) {
+      let multiplier = typeA[i]
+      if (multiplier >= 2) {
+        strongAgainstArray.push(typesInOrder[i])
+      } else if (multiplier < 1) {
+        weakAgainstArray.push(typesInOrder[i])
+      }
+    }
+    for (let i = 0; i < typeAFlip.length; i++) {
+      let multiplier = typeAFlip[i]
+      if (multiplier >= 2) {
+        vulnerableArray.push(typesInOrder[i])
+      } else if (multiplier < 1) {
+        resistanceArray.push(typesInOrder[i])
       }
     }
 
     if (dualType) {
+      typeB = typeTable[typeIndexSec]
+      vulnerableArray = []
+      resistanceArray = []
+      strongAgainstArray = []
+      weakAgainstArray = []
+
       for (let i = 0; i < typeTable.length; i++) {
-        //resistant to: console.log(typeTable[typeIndex][i])
-        if (typeTable[i][typeIndexSec] == 2) {
-          vulnerableArraySec.push(typesInOrder[i])
-          //console.log(typesInOrder[typeTable[typeIndex][i]])
-        }
-        if (
-          typeTable[i][typeIndexSec] == H ||
-          typeTable[i][typeIndexSec] == 0
-        ) {
-          resistanceArraySec.push(typesInOrder[i])
-        }
-        if (typeTable[typeIndexSec][i] == 2) {
-          strongAgainstArraySec.push(typesInOrder[i])
-          //console.log(typesInOrder[i])
-        }
-        if (
-          typeTable[typeIndexSec][i] == H ||
-          typeTable[i][typeIndexSec] == 0
-        ) {
-          weakAgainstArraySec.push(typesInOrder[i])
-        }
+        typeAFlip.push(typeTable[i][typeIndex])
+        typeBFlip.push(typeTable[i][typeIndexSec])
       }
 
-      //console.log('eka type strong: ', strongAgainstArray)
-      //console.log('toka type strong: ', strongAgainstArraySec)
-
-      //console.log('eka vulnerable strong: ', vulnerableArray)
-      //console.log('toka vulnerable strong: ', vulnerableArraySec)
-
-      let vulnerable = vulnerableArray.filter(
-        (val) => !resistanceArraySec.includes(val)
-      )
-      let vulnerable2 = vulnerableArraySec.filter(
-        (val) => !resistanceArray.includes(val)
-      )
-
-      let resistance = resistanceArray.filter(
-        (val) => !vulnerableArraySec.includes(val)
-      )
-      let resistance2 = resistanceArraySec.filter(
-        (val) => !vulnerableArray.includes(val)
-      )
-
-      let strong = strongAgainstArray.filter(
-        (val) => !vulnerableArraySec.includes(val)
-      )
-      let strong2 = strongAgainstArraySec.filter(
-        (val) => !vulnerableArray.includes(val)
-      )
-
-      let weak = weakAgainstArray.filter(
-        (val) => !vulnerableArraySec.includes(val)
-      )
-      let weak2 = weakAgainstArraySec.filter(
-        (val) => !vulnerableArray.includes(val)
-      )
-
-      let weakArrayFinalTemp = weak.concat(weak2)
-      weakAgainstArray = [...new Set(weakArrayFinalTemp)]
-
-      let strongArrayFinalTemp = strong.concat(strong2)
-      strongAgainstArray = [...new Set(strongArrayFinalTemp)]
-
-      let resistanceArrayFinalTemp = resistance.concat(resistance2)
-      resistanceArray = [...new Set(resistanceArrayFinalTemp)]
-
-      let vulnerableArrayFinalTemp = vulnerable.concat(vulnerable2)
-      vulnerableArray = [...new Set(vulnerableArrayFinalTemp)]
+      for (let i = 0; i < typeA.length; i++) {
+        let multiplier = typeA[i] * typeB[i]
+        if (multiplier >= 2) {
+          strongAgainstArray.push(typesInOrder[i])
+        } else if (multiplier < 0.5) {
+          weakAgainstArray.push(typesInOrder[i])
+        }
+      }
+      for (let i = 0; i < typeAFlip.length; i++) {
+        let multiplier = typeAFlip[i] * typeBFlip[i]
+        if (multiplier >= 2) {
+          vulnerableArray.push(typesInOrder[i])
+        } else if (multiplier < 1) {
+          resistanceArray.push(typesInOrder[i])
+        }
+      }
     }
-    //console.log(strongAgainstArrayFinal)
   }
 
   const getComponents = (info) => {
@@ -193,23 +144,23 @@ const TypeCalc = (props) => {
     <View style={styles.typeEffectiveness}>
       {createTypeArrays(props.typeName)}
       <View style={styles.container}>
-        <Text style={commonStyles.subHeading}>Strong {'\n'} against</Text>
+        <Text style={commonStyles.subHeading}>Strong{'\n'}against</Text>
         <ScrollView persistentScrollbar={true}>
           {getComponents('Strong against')}
         </ScrollView>
       </View>
       <View style={styles.container}>
-        <Text style={commonStyles.subHeading}>Weak {'\n'} against</Text>
+        <Text style={commonStyles.subHeading}>Weak{'\n'}against</Text>
         <ScrollView persistentScrollbar={true}>
           {getComponents('Weak against')}
         </ScrollView>
       </View>
       <View style={styles.container}>
-        <Text style={commonStyles.subHeading}>Resistant {'\n'} to</Text>
+        <Text style={commonStyles.subHeading}>Resistant{'\n'}to</Text>
         <ScrollView>{getComponents('Resistant to')}</ScrollView>
       </View>
       <View style={styles.container}>
-        <Text style={commonStyles.subHeading}>Vulnerable {'\n'} to</Text>
+        <Text style={commonStyles.subHeading}>Vulnerable{'\n'}to</Text>
         <ScrollView persistentScrollbar={true}>
           {getComponents('Vulnerable to')}
         </ScrollView>
@@ -235,7 +186,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     textAlign: 'center',
-    justifyContent: 'center',
   },
   scrollView: {
     shouldIndicatorHide: true,

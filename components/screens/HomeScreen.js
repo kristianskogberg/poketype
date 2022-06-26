@@ -8,6 +8,7 @@ import {
   Alert,
   ActivityIndicator,
   TouchableWithoutFeedback,
+  Animated,
 } from 'react-native'
 import commonStyles from '../../assets/styles/commonStyles'
 import { bgColor } from '../../assets/colors'
@@ -99,8 +100,9 @@ export default function HomeScreen() {
     <View style={styles.container}>
       <Text style={[commonStyles.heading, { marginTop: 50 }]}>Pokédex</Text>
       <Text style={commonStyles.subHeading}>
-        Search for a Pokémon by name {'\n'} to view its strengths and
-        weaknesses.
+        Search for a Pokémon by name
+        {'\n'}
+        to view its strengths and weaknesses.
       </Text>
       <View style={styles.searchContainer}>
         <Search width={20} height={20} paddingLeft={10} />
@@ -129,12 +131,14 @@ export default function HomeScreen() {
                   } else {
                     setToggle(true)
                   }
+                  changeArtwork()
                 }}>
-                {toggle ? (
-                  <Image style={styles.image} source={{ uri: imageUrl }} />
-                ) : (
-                  <Image style={styles.image} source={{ uri: imageUrlHome }} />
-                )}
+                <Image
+                  style={styles.image}
+                  source={{
+                    uri: currentImage,
+                  }}
+                />
               </TouchableWithoutFeedback>
 
               <Text style={[commonStyles.heading, { marginBottom: 0 }]}>
