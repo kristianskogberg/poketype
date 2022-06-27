@@ -25,7 +25,7 @@ export default function App() {
   return (
     <View style={styles.container}>
       <HomeScreen />
-      <Text style={commonStyles.footer}>Powered by PokedexAPI</Text>
+      <Text style={commonStyles.footer}>Powered by Pokédex API</Text>
     </View>
   )
 }
