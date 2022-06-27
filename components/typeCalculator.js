@@ -71,9 +71,7 @@ const TypeCalc = (props) => {
       }
     })
     let typeA = typeTable[typeIndex]
-    let typeB = []
     let typeAFlip = []
-    let typeBFlip = []
 
     for (let i = 0; i < typeTable.length; i++) {
       typeAFlip.push(typeTable[i][typeIndex])
@@ -97,7 +95,8 @@ const TypeCalc = (props) => {
     }
 
     if (dualType) {
-      typeB = typeTable[typeIndexSec]
+      let typeB = typeTable[typeIndexSec]
+      let typeBFlip = []
       vulnerableArray = []
       resistanceArray = []
       strongAgainstArray = []
@@ -130,13 +129,13 @@ const TypeCalc = (props) => {
   const getComponents = (info) => {
     switch (info) {
       case 'Strong against':
-        return <Icon typeName={strongAgainstArray} typeEff={true} />
+        return <Icon typeName={strongAgainstArray} calc={true} />
       case 'Weak against':
-        return <Icon typeName={weakAgainstArray} typeEff={true} />
+        return <Icon typeName={weakAgainstArray} calc={true} />
       case 'Resistant to':
-        return <Icon typeName={resistanceArray} typeEff={true} />
+        return <Icon typeName={resistanceArray} calc={true} />
       case 'Vulnerable to':
-        return <Icon typeName={vulnerableArray} typeEff={true} />
+        return <Icon typeName={vulnerableArray} calc={true} />
     }
   }
 
