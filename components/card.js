@@ -1,65 +1,82 @@
-import React, { useState } from 'react'
-import { StyleSheet, Text, View, Image } from 'react-native'
-import { bgColor, textColor } from '../assets/colors'
-import Icon from './typeIcon'
+import react from 'react'
+import {
+  View,
+  SafeAreaView,
+  TouchableOpacity,
+  Text,
+  StyleSheet,
+  Dimensions,
+} from 'react-native'
+import PokemonImage from './image'
 import commonStyles from '../assets/styles/commonStyles'
+import Icon from './typeIcon'
+const { height, width } = Dimensions.get('window')
+import { bgColor } from '../assets/colors'
+import { LinearGradient } from 'expo-linear-gradient'
 
 const Card = (props) => {
-  let getType = (types) => {
-    return types[0]
-  }
-  return (
-    <View
-      style={{
-        ...styles.card,
-        backgroundColor: bgColor[getType(props.types)],
-      }}>
-      <View>
-        <Text style={styles.cardText}>
-          <Text>{props.name}</Text>
-        </Text>
+  const typeColor = props.types[0]
 
-        <Icon typeName={props.types} typeEff={false} />
+  return (
+    <LinearGradient
+      style={{
+        justifyContent: 'center',
+        width: width,
+        height: 200,
+        //borderRadius: 10,
+        margin: 0,
+        zIndex: 10,
+      }}
+      colors={[bgColor[typeColor], '#fff']}>
+      <View style={styles.content}>
+        <View style={styles.textAndTypes}>
+          <Text
+            style={[
+              commonStyles.subheading,
+              {
+                marginBottom: 0,
+                textAlign: 'left',
+                paddingLeft: 10,
+                paddingBottom: 0,
+              },
+            ]}>
+            #{props.pokedexNumber}
+          </Text>
+          <Text
+            style={[
+              commonStyles.heading,
+              {
+                marginBottom: 0,
+                textAlign: 'left',
+                paddingTop: 0,
+              },
+            ]}>
+            {props.pokemonName}
+          </Text>
+
+          <Icon typeName={props.types} typeEff={false} />
+        </View>
+        <TouchableOpacity style={styles.image}>
+          <PokemonImage imageUrl={props.image} />
+        </TouchableOpacity>
       </View>
-      <Image style={styles.image} source={{ uri: props.imageUrl }} />
-    </View>
+    </LinearGradient>
   )
 }
 
 export default Card
 
 const styles = StyleSheet.create({
-  card: {
-    borderRadius: 15,
-    marginTop: 10,
-    flexDirection: 'row',
-    alignItems: 'center',
-    width: '100%',
-    height: '30%',
-  },
   image: {
-    width: 150,
-    height: 150,
-    justifyContent: 'center',
-  },
-  bg: {
     position: 'absolute',
-    backgroundColor: bgColor.rock,
-    width: '90%',
-    height: '30%',
-    borderRadius: 15,
-    bottom: '50%',
-    alignItems: 'center',
+    right: 6,
+  },
+  textAndTypes: {
     flexDirection: 'column',
+    paddingLeft: 10,
   },
-  nameAndTypes: {
-    alignItems: 'baseline',
-  },
-  cardText: {
-    fontSize: 32,
-    fontWeight: '700',
-    color: textColor.white,
-    padding: 5,
-    textAlign: 'center',
+  content: {
+    alignItems: 'center',
+    flexDirection: 'row',
   },
 })

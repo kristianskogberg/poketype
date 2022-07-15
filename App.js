@@ -1,48 +1,27 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  Dimensions,
-  ImageBackground,
-} from 'react-native'
-//import textColor from './assets/colors/colors';
+import { StyleSheet, StatusBar, Text, ScrollView, View } from 'react-native'
 import HomeScreen from './components/screens/HomeScreen'
-
-import { useFonts } from 'expo-font'
-import Pokeball from './assets/images/pokeball.png'
 import commonStyles from './assets/styles/commonStyles'
 import { width, height } from './assets/constants'
 
+import { SafeAreaView } from 'react-native-safe-area-context'
+
+import Test from './components/screens/test'
+
 export default function App() {
-  let [fontsLoaded] = useFonts({
-    'SF-Pro-Display-Bold': require('./assets/fonts/SF-Pro-Display-Bold.otf'),
-  })
-
-  if (!fontsLoaded) {
-    return null
-  }
-
-  return (
-    <View style={styles.container}>
-      <HomeScreen />
-      <Text style={commonStyles.footer}>Powered by PokéAPI</Text>
-    </View>
-  )
+  return <HomeScreen />
+  //return <Test />
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: width,
-    height: height,
+    paddingTop: StatusBar.currentHeight,
   },
-  image: {
-    width: '100%',
-    height: 100,
-    position: 'absolute',
-    backgroundColor: 'red',
+  scrollView: {
+    backgroundColor: 'pink',
+    marginHorizontal: 20,
+  },
+  text: {
+    fontSize: 42,
   },
 })

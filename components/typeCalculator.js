@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { StyleSheet, Text, View, ScrollView } from 'react-native'
+import { StyleSheet, Text, View, ScrollView, SafeAreaView } from 'react-native'
 import commonStyles from '../assets/styles/commonStyles'
 import RNFadedScrollView from 'rn-faded-scrollview'
 import ScrollViewIndicator from 'react-native-scroll-indicator'
@@ -129,7 +129,11 @@ const TypeCalc = (props) => {
   const getComponents = (info) => {
     switch (info) {
       case 'Strong against':
-        return <Icon typeName={strongAgainstArray} calc={true} />
+        return (
+          <View style={{ flexDirection: 'column' }}>
+            <Icon typeName={strongAgainstArray} calc={true} />
+          </View>
+        )
       case 'Weak against':
         return <Icon typeName={weakAgainstArray} calc={true} />
       case 'Resistant to':
@@ -140,30 +144,34 @@ const TypeCalc = (props) => {
   }
 
   return (
-    <View style={styles.typeEffectiveness}>
-      {createTypeArrays(props.typeName)}
-      <View style={styles.container}>
-        <Text style={commonStyles.subHeading}>Strong{'\n'}against</Text>
-        <ScrollView persistentScrollbar={true}>
-          {getComponents('Strong against')}
-        </ScrollView>
-      </View>
-      <View style={styles.container}>
-        <Text style={commonStyles.subHeading}>Weak{'\n'}against</Text>
-        <ScrollView persistentScrollbar={true}>
-          {getComponents('Weak against')}
-        </ScrollView>
-      </View>
-      <View style={styles.container}>
-        <Text style={commonStyles.subHeading}>Resistant{'\n'}to</Text>
-        <ScrollView>{getComponents('Resistant to')}</ScrollView>
-      </View>
-      <View style={styles.container}>
-        <Text style={commonStyles.subHeading}>Vulnerable{'\n'}to</Text>
-        <ScrollView persistentScrollbar={true}>
-          {getComponents('Vulnerable to')}
-        </ScrollView>
-      </View>
+    <View style={{ flex: 1, paddingHorizontal: 10 }}>
+      <ScrollView persistentScrollbar={true}>
+        {createTypeArrays(props.typeName)}
+
+        <Text style={commonStyles.calcHeading}>Strong against</Text>
+
+        <View style={styles.icon}>
+          <Icon typeName={strongAgainstArray} typeEff={false} />
+        </View>
+        <View style={styles.lineSeparator} />
+        <Text style={commonStyles.calcHeading}>Weak against</Text>
+
+        <View style={styles.icon}>
+          <Icon typeName={weakAgainstArray} typeEff={false} />
+        </View>
+        <View style={styles.lineSeparator} />
+        <Text style={commonStyles.calcHeading}>Resistant to</Text>
+
+        <View style={styles.icon}>
+          <Icon typeName={resistanceArray} typeEff={false} />
+        </View>
+        <View style={styles.lineSeparator} />
+        <Text style={commonStyles.calcHeading}>Vulnerable to</Text>
+
+        <View style={styles.icon}>
+          <Icon typeName={vulnerableArray} typeEff={false} />
+        </View>
+      </ScrollView>
     </View>
   )
 }
@@ -172,28 +180,14 @@ export default TypeCalc
 
 const styles = StyleSheet.create({
   icon: {
-    paddingHorizontal: 10,
+    marginBottom: 10,
+  },
+  lineSeparator: {
+    borderBottomColor: 'black',
+    width: '100%',
+    alignItems: 'center',
     justifyContent: 'center',
-    flexDirection: 'row',
-    flex: 1,
-  },
-  typeEffectiveness: {
-    flex: 1,
-    alignItems: 'flex-start',
-    flexDirection: 'row',
-  },
-  container: {
-    flex: 1,
-    textAlign: 'center',
-  },
-  scrollView: {
-    shouldIndicatorHide: true,
-    flexibleIndicator: false,
-    scrollIndicatorStyle: { backgroundColor: 'gray' },
-    scrollIndicatorContainerStyle: { backgroundColor: 'rgba(0, 0, 0, 0.1)' },
-    useNativeDriver: true,
-  },
-  backgroundStyle: {
-    flex: 1,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    marginBottom: 5,
   },
 })

@@ -1,31 +1,31 @@
 import { StyleSheet } from 'react-native'
-import { Colors } from 'react-native/Libraries/NewAppScreen'
 import { textColor } from '../colors'
-
-const fontFamily = StyleSheet.create({
-  bold: {
-    fontFamily: 'SF-Pro-Display-Bold',
-    //color: textColor.black,
-  },
-  regular: {
-    fontFamily: 'SF-Pro-Display-Regular',
-  },
-})
 
 export default StyleSheet.create({
   heading: {
     fontSize: 32,
-    fontWeight: '700',
+    fontWeight: 'bold',
     color: textColor.black,
     padding: 5,
-    //...fontFamily.bold,
+    textAlign: 'center',
+  },
+  headingNumber: {
+    fontSize: 28,
+    color: textColor.grey,
+    textAlign: 'center',
   },
   subHeading: {
+    fontSize: 16,
+    color: textColor.grey,
+    alignItems: 'center',
+    textAlign: 'center',
+  },
+  calcHeading: {
     fontSize: 16,
     padding: 5,
     color: textColor.grey,
     alignItems: 'center',
-    textAlign: 'center',
+    textAlign: 'left',
   },
   textInput: {
     borderWidth: 1,
@@ -48,5 +48,7 @@ export default StyleSheet.create({
     justifyContent: 'center',
     textAlign: 'center',
     marginBottom: 14,
+    position: 'absolute',
+    bottom: 10,
   },
 })

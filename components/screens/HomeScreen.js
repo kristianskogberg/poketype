@@ -8,9 +8,10 @@ import {
   Image,
   Alert,
   ActivityIndicator,
-  TouchableWithoutFeedback,
   TouchableOpacity,
   Dimensions,
+  ScrollView,
+  StatusBar,
 } from 'react-native'
 import commonStyles from '../../assets/styles/commonStyles'
 import { bgColor } from '../../assets/colors'
@@ -18,6 +19,10 @@ import Icon from '../typeIcon'
 import TypeCalc from '../typeCalculator'
 import Search from '../../assets/images/search.svg'
 import PokemonImage from '../image'
+import SearchBar from '../searchBar'
+import Card from '../card'
+
+import { SafeAreaView } from 'react-native-safe-area-context'
 
 const { height, width } = Dimensions.get('window')
 export default function HomeScreen() {
@@ -26,9 +31,12 @@ export default function HomeScreen() {
   let [searching, setSearching] = useState()
   let [data, setData] = useState(null)
   let [types, setTypes] = useState([])
-  let [number, setNumber] = useState(null)
+  let [pokedexNumber, setpokedexNumber] = useState(null)
   let [isError, setError] = useState(false)
   let [name, setName] = useState('')
+  let [allPokemonNames, setAllPokemonNames] = useState([])
+
+  const pokemonArray = []
   const [toggle, setToggle] = useState(false)
   const [currentImage, setCurrentImage] = useState('')
 
@@ -51,20 +59,33 @@ export default function HomeScreen() {
     }
   }
 
-  const fetchImage = async (imgUrl) => {
-    const res = await fetch(imgUrl)
-    const imageBlob = await res.blob()
-    const imageObjectURL = URL.createObjectURL(imageBlob)
-    return imageObjectURL
+  const fetchPokemonNames = async () => {
+    fetch('https://pokeapi.co/api/v2/pokemon/?limit=898')
+      .then((res) => {
+        return res.json()
+      })
+      .then((result) => {
+        const a = result['results']
+        //console.log(a)
+
+        a.forEach((pokemon) => {
+          pokemonArray.push(CapitalizeFirstLetter(pokemon.name))
+        })
+
+        setAllPokemonNames(result['results'])
+      })
+      .catch((err) => {
+        console.error(err)
+      })
   }
+
+  useEffect(() => {
+    fetchPokemonNames()
+  }, [])
 
   useEffect(() => {
     if (searching) {
       const pokemon = pokemonName.toLowerCase()
-
-      if (!pokemon.trim()) {
-        return
-      }
 
       const image1 = ''
       const image2 = ''
@@ -81,15 +102,13 @@ export default function HomeScreen() {
               result['sprites']['other']['official-artwork']['front_default']
             )
 
-            setNumber(result['id'])
+            setpokedexNumber(result['id'])
             setImageUrl(
               result['sprites']['other']['official-artwork']['front_default']
             )
 
-            //console.log(result["sprites"]["other"])
             setImageUrlHome(result['sprites']['other']['home']['front_default'])
-            //console.log(result["types"][0]["type"]["name"])
-            //console.log(result.types)
+
             let typeArray = []
             for (var i in result.types) typeArray.push([i, result.types[i]])
 
@@ -122,21 +141,18 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={[commonStyles.heading, { marginTop: 50 }]}>Pokédex</Text>
-      <Text style={commonStyles.subHeading}>
-        Search for a Pokémon by name or number
-        {'\n'}
-        to view its strengths and weaknesses.
-      </Text>
       <View style={styles.searchContainer}>
-        <Search width={20} height={20} paddingLeft={10} />
+        <Search width={16} height={16} marginLeft={4} />
         <TextInput
           style={styles.input}
-          placeholder="e.g. Bulbasaur"
+          placeholder="Search for a Pokémon"
           value={pokemonName}
           onChangeText={(value) => setInput(value)}
           onSubmitEditing={() => {
-            setSearching(true)
+            // check if input is not empty
+            if (pokemonName.trim().length !== 0) {
+              setSearching(true)
+            }
           }}></TextInput>
       </View>
 
@@ -144,23 +160,20 @@ export default function HomeScreen() {
         <ActivityIndicator style={{ margin: 50 }}></ActivityIndicator>
       ) : null}
       {data ? (
-        <View style={styles.container}>
+        <>
           {searching ? null : (
-            <View style={styles.container}>
-              <TouchableOpacity>
-                <PokemonImage imageUrl={currentImage} />
-              </TouchableOpacity>
-
-              <Text style={[commonStyles.heading, { marginBottom: 0 }]}>
-                {CapitalizeFirstLetter(name)}
-              </Text>
-
-              <Icon typeName={types} typeEff={false} />
+            <>
+              <Card
+                pokemonName={CapitalizeFirstLetter(name)}
+                image={currentImage}
+                types={types}
+                pokedexNumber={pokedexNumber}
+              />
 
               <TypeCalc typeName={types} />
-            </View>
+            </>
           )}
-        </View>
+        </>
       ) : null}
     </View>
   )
@@ -170,33 +183,40 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
     backgroundColor: 'white',
+    //marginTop: StatusBar.currentHeight,
+    marginTop: 60,
   },
-  image: {
-    height: 200,
-    width: 200,
+  scrollView: {
+    backgroundColor: 'pink',
+    marginHorizontal: 20,
   },
-  pokemonBg: {
-    width: '100%',
-    height: 300,
-    backgroundColor: bgColor.grass,
+  maintext: {
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   searchContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    borderWidth: 1,
+    //borderWidth: 1,
     padding: 8,
-    paddingLeft: 12,
-    width: '50%',
-    borderRadius: 50,
-    margin: 10,
+    margin: 8,
+    width: '75%',
+    borderRadius: 10,
     backgroundColor: '#F2F2F2',
   },
   input: {
     flex: 1,
     paddingLeft: 10,
     color: '#424242',
+  },
+  flatList: {
+    paddingLeft: 15,
+    marginTop: 15,
+    paddingBottom: 15,
+    fontSize: 18,
+    borderBottomColor: '#26a69a',
+    borderBottomWidth: 1,
   },
 })

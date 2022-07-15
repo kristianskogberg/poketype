@@ -21,8 +21,10 @@ import Rock from '../assets/images/type_icons/rock.svg'
 import Steel from '../assets/images/type_icons/steel.svg'
 import Water from '../assets/images/type_icons/water.svg'
 
-const MAX_WIDTH = 80
-const MAX_HEIGHT = 45
+import { textColor } from '../assets/colors'
+
+const SCALE_MULTIPLIER = 1.3
+const HEIGHT = 25
 
 const Icon = (props) => {
   const getTypeIcons = (type, i) => {
@@ -30,126 +32,180 @@ const Icon = (props) => {
       case 'Bug':
         return (
           <TouchableOpacity style={styles.icon} key={i}>
-            <Bug width={MAX_WIDTH} height={MAX_HEIGHT} paddingHorizontal={10} />
+            <Bug
+              width={SCALE_MULTIPLIER * 51}
+              height={SCALE_MULTIPLIER * HEIGHT}
+            />
           </TouchableOpacity>
         )
         break
       case 'Dark':
         return (
           <TouchableOpacity style={styles.icon} key={i}>
-            <Dark width={MAX_WIDTH} height={MAX_HEIGHT} />
+            <Dark
+              width={SCALE_MULTIPLIER * 55}
+              height={SCALE_MULTIPLIER * HEIGHT}
+            />
           </TouchableOpacity>
         )
         break
       case 'Dragon':
         return (
           <TouchableOpacity style={styles.icon} key={i}>
-            <Dragon width={MAX_WIDTH} height={MAX_HEIGHT} />
+            <Dragon
+              width={SCALE_MULTIPLIER * 69}
+              height={SCALE_MULTIPLIER * HEIGHT}
+            />
           </TouchableOpacity>
         )
         break
       case 'Electric':
         return (
           <TouchableOpacity style={styles.icon} key={i}>
-            <Electric width={MAX_WIDTH} height={MAX_HEIGHT} />
+            <Electric
+              width={SCALE_MULTIPLIER * 69}
+              height={SCALE_MULTIPLIER * HEIGHT}
+            />
           </TouchableOpacity>
         )
         break
       case 'Fairy':
         return (
           <TouchableOpacity style={styles.icon} key={i}>
-            <Fairy width={MAX_WIDTH} height={MAX_HEIGHT} />
+            <Fairy
+              width={SCALE_MULTIPLIER * 55}
+              height={SCALE_MULTIPLIER * HEIGHT}
+            />
           </TouchableOpacity>
         )
         break
       case 'Fighting':
         return (
           <TouchableOpacity style={styles.icon} key={i}>
-            <Fighting width={MAX_WIDTH} height={MAX_HEIGHT} />
+            <Fighting
+              width={SCALE_MULTIPLIER * 73}
+              height={SCALE_MULTIPLIER * HEIGHT}
+            />
           </TouchableOpacity>
         )
         break
       case 'Fire':
         return (
           <TouchableOpacity style={styles.icon} key={i}>
-            <Fire width={MAX_WIDTH} height={MAX_HEIGHT} />
+            <Fire
+              width={SCALE_MULTIPLIER * 50}
+              height={SCALE_MULTIPLIER * HEIGHT}
+            />
           </TouchableOpacity>
         )
         break
       case 'Flying':
         return (
           <TouchableOpacity style={styles.icon} key={i}>
-            <Flying width={MAX_WIDTH} height={MAX_HEIGHT} />
+            <Flying
+              width={SCALE_MULTIPLIER * 62}
+              height={SCALE_MULTIPLIER * HEIGHT}
+            />
           </TouchableOpacity>
         )
         break
       case 'Ghost':
         return (
           <TouchableOpacity style={styles.icon} key={i}>
-            <Ghost width={MAX_WIDTH} height={MAX_HEIGHT} />
+            <Ghost
+              width={SCALE_MULTIPLIER * 62}
+              height={SCALE_MULTIPLIER * HEIGHT}
+            />
           </TouchableOpacity>
         )
         break
       case 'Grass':
         return (
           <TouchableOpacity style={styles.icon} key={i}>
-            <Grass width={MAX_WIDTH} height={MAX_HEIGHT} />
+            <Grass
+              width={SCALE_MULTIPLIER * 61}
+              height={SCALE_MULTIPLIER * HEIGHT}
+            />
           </TouchableOpacity>
         )
         break
       case 'Ground':
         return (
           <TouchableOpacity style={styles.icon} key={i}>
-            <Ground width={MAX_WIDTH} height={MAX_HEIGHT} />
+            <Ground
+              width={SCALE_MULTIPLIER * 69}
+              height={SCALE_MULTIPLIER * HEIGHT}
+            />
           </TouchableOpacity>
         )
         break
       case 'Ice':
         return (
           <TouchableOpacity style={styles.icon} key={i}>
-            <Ice width={MAX_WIDTH} height={MAX_HEIGHT} />
+            <Ice
+              width={SCALE_MULTIPLIER * 46}
+              height={SCALE_MULTIPLIER * HEIGHT}
+            />
           </TouchableOpacity>
         )
         break
       case 'Normal':
         return (
           <TouchableOpacity style={styles.icon} key={i}>
-            <Normal width={MAX_WIDTH} height={MAX_HEIGHT} />
+            <Normal
+              width={SCALE_MULTIPLIER * 68}
+              height={SCALE_MULTIPLIER * HEIGHT}
+            />
           </TouchableOpacity>
         )
         break
       case 'Poison':
         return (
           <TouchableOpacity style={styles.icon} key={i}>
-            <Poison width={MAX_WIDTH} height={MAX_HEIGHT} />
+            <Poison
+              width={SCALE_MULTIPLIER * 65}
+              height={SCALE_MULTIPLIER * HEIGHT}
+            />
           </TouchableOpacity>
         )
         break
       case 'Psychic':
         return (
           <TouchableOpacity style={styles.icon} key={i}>
-            <Psychic width={MAX_WIDTH} height={MAX_HEIGHT} />
+            <Psychic
+              width={SCALE_MULTIPLIER * 71}
+              height={SCALE_MULTIPLIER * HEIGHT}
+            />
           </TouchableOpacity>
         )
         break
       case 'Rock':
         return (
           <TouchableOpacity style={styles.icon} key={i}>
-            <Rock width={MAX_WIDTH} height={MAX_HEIGHT} />
+            <Rock
+              width={SCALE_MULTIPLIER * 57}
+              height={SCALE_MULTIPLIER * HEIGHT}
+            />
           </TouchableOpacity>
         )
         break
       case 'Steel':
         return (
           <TouchableOpacity style={styles.icon} key={i}>
-            <Steel width={MAX_WIDTH} height={MAX_HEIGHT} />
+            <Steel
+              width={SCALE_MULTIPLIER * 57}
+              height={SCALE_MULTIPLIER * HEIGHT}
+            />
           </TouchableOpacity>
         )
         break
       case 'Water':
         return (
           <TouchableOpacity style={styles.icon} key={i}>
-            <Water width={MAX_WIDTH} height={MAX_HEIGHT} />
+            <Water
+              width={SCALE_MULTIPLIER * 61}
+              height={SCALE_MULTIPLIER * HEIGHT}
+            />
           </TouchableOpacity>
         )
         break
@@ -165,13 +221,11 @@ const Icon = (props) => {
     })
     return comps
   }
-
-  if (props.calc) {
-    return (
-      <View style={styles.typeCalculator}>{getComponents(props.typeName)}</View>
-    )
+  /*
+  if (props.typeName === undefined || props.typeName.length == 0) {
+    return <Text>Joo</Text>
   }
-
+  */
   return <View style={styles.icon}>{getComponents(props.typeName)}</View>
 }
 
@@ -179,14 +233,10 @@ export default Icon
 
 const styles = StyleSheet.create({
   icon: {
-    paddingHorizontal: 5,
-    justifyContent: 'space-between',
+    paddingHorizontal: 3,
+    paddingVertical: 3,
+    alignItems: 'flex-start',
     flexDirection: 'row',
-  },
-  typeCalculator: {
-    paddingHorizontal: 10,
-    justifyContent: 'center',
-    flexDirection: 'column',
-    alignItems: 'center',
+    flexWrap: 'wrap',
   },
 })
