@@ -5,7 +5,7 @@ import {
   Text,
   View,
   TextInput,
-  Image,
+  Button,
   Alert,
   ActivityIndicator,
   TouchableOpacity,
@@ -35,6 +35,7 @@ export default function HomeScreen() {
   let [isError, setError] = useState(false)
   let [name, setName] = useState('')
   let [allPokemonNames, setAllPokemonNames] = useState([])
+  let [inputIsType, setInputIsType] = useState(false)
 
   const pokemonArray = []
   const [toggle, setToggle] = useState(false)
@@ -79,6 +80,35 @@ export default function HomeScreen() {
       })
   }
 
+  const allTypes = [
+    'normal',
+    'fire',
+    'water',
+    'electric',
+    'grass',
+    'ice',
+    'fighting',
+    'poison',
+    'ground',
+    'flying',
+    'psychic',
+    'bug',
+    'rock',
+    'ghost',
+    'dragon',
+    'dark',
+    'steel',
+    'fairy',
+  ]
+
+  const calculateByType = (type) => {
+    setTypes([CapitalizeFirstLetter(type)])
+    setData(type)
+    setInputIsType(true)
+    setLoading(false)
+    setSearching(false)
+  }
+
   useEffect(() => {
     fetchPokemonNames()
   }, [])
@@ -89,6 +119,13 @@ export default function HomeScreen() {
 
       const image1 = ''
       const image2 = ''
+
+      // check if input is type
+      if (allTypes.includes(pokemon)) {
+        calculateByType(pokemon)
+        return
+      }
+      setInputIsType(false)
 
       setToggle(true)
       setLoading(true)
@@ -102,7 +139,7 @@ export default function HomeScreen() {
               result['sprites']['other']['official-artwork']['front_default']
             )
 
-            setpokedexNumber(result['id'])
+            setpokedexNumber('#' + result['id'])
             setImageUrl(
               result['sprites']['other']['official-artwork']['front_default']
             )
@@ -139,13 +176,28 @@ export default function HomeScreen() {
     }
   }, [searching])
 
+  const getLabels = () => {
+    if (!data) {
+      return (
+        <View>
+          <Text style={commonStyles.heading}>PokeType</Text>
+          <Text style={commonStyles.subHeading}>
+            {' '}
+            Search for a Pokémon by name, number or type to view its strengths
+            and weaknesses.
+          </Text>
+        </View>
+      )
+    }
+  }
   return (
     <View style={styles.container}>
+      {getLabels()}
       <View style={styles.searchContainer}>
         <Search width={16} height={16} marginLeft={4} />
         <TextInput
           style={styles.input}
-          placeholder="Search for a Pokémon"
+          placeholder="Search for a Pokémon or Type"
           value={pokemonName}
           onChangeText={(value) => setInput(value)}
           onSubmitEditing={() => {
@@ -163,14 +215,49 @@ export default function HomeScreen() {
         <>
           {searching ? null : (
             <>
-              <Card
-                pokemonName={CapitalizeFirstLetter(name)}
-                image={currentImage}
-                types={types}
-                pokedexNumber={pokedexNumber}
-              />
-
-              <TypeCalc typeName={types} />
+              {inputIsType ? (
+                <>
+                  <Card
+                    pokemonName={types}
+                    //image={currentImage}
+                    types={types}
+                    pokedexNumber={'Type:'}
+                    inputIsType={true}
+                    calculateByType={calculateByType}
+                  />
+                </>
+              ) : (
+                <>
+                  <Card
+                    pokemonName={CapitalizeFirstLetter(name)}
+                    image={currentImage}
+                    types={types}
+                    pokedexNumber={pokedexNumber}
+                    inputIsType={false}
+                    calculateByType={calculateByType}
+                  />
+                </>
+              )}
+              <View
+                style={{
+                  flex: 1,
+                  paddingHorizontal: 10,
+                  alignItems: 'flex-start',
+                  width: '100%',
+                }}>
+                <ScrollView persistentScrollbar={true}>
+                  <TypeCalc
+                    typeName={types}
+                    calculateByType={calculateByType}
+                  />
+                  <View
+                    style={{
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flex: 1,
+                    }}></View>
+                </ScrollView>
+              </View>
             </>
           )}
         </>
@@ -210,6 +297,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingLeft: 10,
     color: '#424242',
+    fontSize: 17,
   },
   flatList: {
     paddingLeft: 15,

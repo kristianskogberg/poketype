@@ -15,14 +15,15 @@ export default StyleSheet.create({
     textAlign: 'center',
   },
   subHeading: {
-    fontSize: 16,
+    fontSize: 17,
     color: textColor.grey,
     alignItems: 'center',
     textAlign: 'center',
+    padding: 10,
   },
   calcHeading: {
-    fontSize: 16,
-    padding: 5,
+    fontSize: 17,
+    padding: 6,
     color: textColor.grey,
     alignItems: 'center',
     textAlign: 'left',

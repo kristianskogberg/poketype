@@ -1,10 +1,17 @@
 import React, { useState, useEffect } from 'react'
-import { StyleSheet, Text, View, ScrollView, SafeAreaView } from 'react-native'
+import {
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+  SafeAreaView,
+  Dimensions,
+} from 'react-native'
 import commonStyles from '../assets/styles/commonStyles'
 import RNFadedScrollView from 'rn-faded-scrollview'
 import ScrollViewIndicator from 'react-native-scroll-indicator'
 
-import Icon from '../components/typeIcon'
+import Icon from './typeIcon'
 
 import { LinearGradient } from 'expo-linear-gradient'
 
@@ -144,34 +151,44 @@ const TypeCalc = (props) => {
   }
 
   return (
-    <View style={{ flex: 1, paddingHorizontal: 10 }}>
-      <ScrollView persistentScrollbar={true}>
-        {createTypeArrays(props.typeName)}
+    <View>
+      {createTypeArrays(props.typeName)}
 
-        <Text style={commonStyles.calcHeading}>Strong against</Text>
+      <Text style={commonStyles.calcHeading}>Strong against</Text>
 
-        <View style={styles.icon}>
-          <Icon typeName={strongAgainstArray} typeEff={false} />
-        </View>
-        <View style={styles.lineSeparator} />
-        <Text style={commonStyles.calcHeading}>Weak against</Text>
+      <View style={styles.icon}>
+        <Icon
+          typeName={strongAgainstArray}
+          calculateByType={props.calculateByType}
+        />
+      </View>
+      <View style={styles.lineSeparator} />
+      <Text style={commonStyles.calcHeading}>Weak against</Text>
 
-        <View style={styles.icon}>
-          <Icon typeName={weakAgainstArray} typeEff={false} />
-        </View>
-        <View style={styles.lineSeparator} />
-        <Text style={commonStyles.calcHeading}>Resistant to</Text>
+      <View style={styles.icon}>
+        <Icon
+          typeName={weakAgainstArray}
+          calculateByType={props.calculateByType}
+        />
+      </View>
+      <View style={styles.lineSeparator} />
+      <Text style={commonStyles.calcHeading}>Resistant to</Text>
 
-        <View style={styles.icon}>
-          <Icon typeName={resistanceArray} typeEff={false} />
-        </View>
-        <View style={styles.lineSeparator} />
-        <Text style={commonStyles.calcHeading}>Vulnerable to</Text>
+      <View style={styles.icon}>
+        <Icon
+          typeName={resistanceArray}
+          calculateByType={props.calculateByType}
+        />
+      </View>
+      <View style={styles.lineSeparator} />
+      <Text style={commonStyles.calcHeading}>Vulnerable to</Text>
 
-        <View style={styles.icon}>
-          <Icon typeName={vulnerableArray} typeEff={false} />
-        </View>
-      </ScrollView>
+      <View style={styles.icon}>
+        <Icon
+          typeName={vulnerableArray}
+          calculateByType={props.calculateByType}
+        />
+      </View>
     </View>
   )
 }
@@ -184,7 +201,7 @@ const styles = StyleSheet.create({
   },
   lineSeparator: {
     borderBottomColor: 'black',
-    width: '100%',
+    width: Dimensions.get('window').width,
     alignItems: 'center',
     justifyContent: 'center',
     borderBottomWidth: StyleSheet.hairlineWidth,

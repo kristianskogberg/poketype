@@ -13,9 +13,15 @@ import Icon from './typeIcon'
 const { height, width } = Dimensions.get('window')
 import { bgColor } from '../assets/colors'
 import { LinearGradient } from 'expo-linear-gradient'
+import TypeImage from './typeImage'
 
 const Card = (props) => {
   const typeColor = props.types[0]
+
+  const typeImages = {
+    Bug: '../assets/images/type_images/bug.svg',
+    Dark: '../assets/images/type_images/dark.svg',
+  }
 
   return (
     <LinearGradient
@@ -36,11 +42,11 @@ const Card = (props) => {
               {
                 marginBottom: 0,
                 textAlign: 'left',
-                paddingLeft: 10,
+                paddingLeft: 8,
                 paddingBottom: 0,
               },
             ]}>
-            #{props.pokedexNumber}
+            {props.pokedexNumber}
           </Text>
           <Text
             style={[
@@ -54,11 +60,22 @@ const Card = (props) => {
             {props.pokemonName}
           </Text>
 
-          <Icon typeName={props.types} typeEff={false} />
+          <Icon
+            style={[{ paddingVertical: 0 }]}
+            typeName={props.types}
+            calculateByType={props.calculateByType}
+          />
         </View>
-        <TouchableOpacity style={styles.image}>
-          <PokemonImage imageUrl={props.image} />
-        </TouchableOpacity>
+
+        {props.inputIsType ? (
+          <TouchableOpacity style={styles.typeImage}>
+            <TypeImage type={props.types} />
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity style={styles.pokemonImage}>
+            <PokemonImage imageUrl={props.image} />
+          </TouchableOpacity>
+        )}
       </View>
     </LinearGradient>
   )
@@ -67,10 +84,11 @@ const Card = (props) => {
 export default Card
 
 const styles = StyleSheet.create({
-  image: {
+  pokemonImage: {
     position: 'absolute',
     right: 6,
   },
+  typeImage: { position: 'absolute', right: 0 },
   textAndTypes: {
     flexDirection: 'column',
     paddingLeft: 10,
