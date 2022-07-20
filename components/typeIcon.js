@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View, Dimensions } from 'react-native'
 import { TouchableOpacity } from 'react-native'
 
 import Bug from '../assets/images/type_icons/bug.svg'
@@ -29,7 +29,7 @@ const HEIGHT = 25
 const Icon = (props) => {
   const getTypeIcons = (type, i) => {
     switch (type) {
-      case 'Bug':
+      case 'bug':
         return (
           <TouchableOpacity
             style={styles.icon}
@@ -42,7 +42,7 @@ const Icon = (props) => {
           </TouchableOpacity>
         )
         break
-      case 'Dark':
+      case 'dark':
         return (
           <TouchableOpacity
             style={styles.icon}
@@ -55,7 +55,7 @@ const Icon = (props) => {
           </TouchableOpacity>
         )
         break
-      case 'Dragon':
+      case 'dragon':
         return (
           <TouchableOpacity
             style={styles.icon}
@@ -68,7 +68,7 @@ const Icon = (props) => {
           </TouchableOpacity>
         )
         break
-      case 'Electric':
+      case 'electric':
         return (
           <TouchableOpacity
             style={styles.icon}
@@ -81,7 +81,7 @@ const Icon = (props) => {
           </TouchableOpacity>
         )
         break
-      case 'Fairy':
+      case 'fairy':
         return (
           <TouchableOpacity
             style={styles.icon}
@@ -94,7 +94,7 @@ const Icon = (props) => {
           </TouchableOpacity>
         )
         break
-      case 'Fighting':
+      case 'fighting':
         return (
           <TouchableOpacity
             style={styles.icon}
@@ -107,7 +107,7 @@ const Icon = (props) => {
           </TouchableOpacity>
         )
         break
-      case 'Fire':
+      case 'fire':
         return (
           <TouchableOpacity
             style={styles.icon}
@@ -120,7 +120,7 @@ const Icon = (props) => {
           </TouchableOpacity>
         )
         break
-      case 'Flying':
+      case 'flying':
         return (
           <TouchableOpacity
             style={styles.icon}
@@ -133,7 +133,7 @@ const Icon = (props) => {
           </TouchableOpacity>
         )
         break
-      case 'Ghost':
+      case 'ghost':
         return (
           <TouchableOpacity
             style={styles.icon}
@@ -146,7 +146,7 @@ const Icon = (props) => {
           </TouchableOpacity>
         )
         break
-      case 'Grass':
+      case 'grass':
         return (
           <TouchableOpacity
             style={styles.icon}
@@ -159,7 +159,7 @@ const Icon = (props) => {
           </TouchableOpacity>
         )
         break
-      case 'Ground':
+      case 'ground':
         return (
           <TouchableOpacity
             style={styles.icon}
@@ -172,7 +172,7 @@ const Icon = (props) => {
           </TouchableOpacity>
         )
         break
-      case 'Ice':
+      case 'ice':
         return (
           <TouchableOpacity
             style={styles.icon}
@@ -185,7 +185,7 @@ const Icon = (props) => {
           </TouchableOpacity>
         )
         break
-      case 'Normal':
+      case 'normal':
         return (
           <TouchableOpacity
             style={styles.icon}
@@ -198,7 +198,7 @@ const Icon = (props) => {
           </TouchableOpacity>
         )
         break
-      case 'Poison':
+      case 'poison':
         return (
           <TouchableOpacity
             style={styles.icon}
@@ -211,7 +211,7 @@ const Icon = (props) => {
           </TouchableOpacity>
         )
         break
-      case 'Psychic':
+      case 'psychic':
         return (
           <TouchableOpacity
             style={styles.icon}
@@ -224,7 +224,7 @@ const Icon = (props) => {
           </TouchableOpacity>
         )
         break
-      case 'Rock':
+      case 'rock':
         return (
           <TouchableOpacity
             style={styles.icon}
@@ -237,7 +237,7 @@ const Icon = (props) => {
           </TouchableOpacity>
         )
         break
-      case 'Steel':
+      case 'steel':
         return (
           <TouchableOpacity
             style={styles.icon}
@@ -250,7 +250,7 @@ const Icon = (props) => {
           </TouchableOpacity>
         )
         break
-      case 'Water':
+      case 'water':
         return (
           <TouchableOpacity
             style={styles.icon}
@@ -288,6 +288,7 @@ export default Icon
 const styles = StyleSheet.create({
   icon: {
     padding: 3,
+    //margin: 3,
     alignItems: 'flex-start',
     flexDirection: 'row',
     flexWrap: 'wrap',

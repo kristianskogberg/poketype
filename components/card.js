@@ -11,17 +11,16 @@ import PokemonImage from './image'
 import commonStyles from '../assets/styles/commonStyles'
 import Icon from './typeIcon'
 const { height, width } = Dimensions.get('window')
-import { bgColor } from '../assets/colors'
+import { bgColor, textColor } from '../assets/colors'
 import { LinearGradient } from 'expo-linear-gradient'
 import TypeImage from './typeImage'
+
+import PokeBall from '../assets/images/pokeball.svg'
 
 const Card = (props) => {
   const typeColor = props.types[0]
 
-  const typeImages = {
-    Bug: '../assets/images/type_images/bug.svg',
-    Dark: '../assets/images/type_images/dark.svg',
-  }
+  const SCALE = 2
 
   return (
     <LinearGradient
@@ -34,18 +33,26 @@ const Card = (props) => {
         zIndex: 10,
       }}
       colors={[bgColor[typeColor], '#fff']}>
+      <View
+        style={{
+          position: 'absolute',
+          left: 86,
+          top: 22,
+          opacity: 0.25,
+        }}>
+        <PokeBall fill={'white'} width={SCALE * 207} height={SCALE * 104} />
+      </View>
       <View style={styles.content}>
         <View style={styles.textAndTypes}>
           <Text
-            style={[
-              commonStyles.subheading,
-              {
-                marginBottom: 0,
-                textAlign: 'left',
-                paddingLeft: 8,
-                paddingBottom: 0,
-              },
-            ]}>
+            style={{
+              marginBottom: 0,
+              textAlign: 'left',
+              paddingLeft: 8,
+              paddingBottom: 0,
+              fontSize: 16,
+              color: textColor.grey,
+            }}>
             {props.pokedexNumber}
           </Text>
           <Text
@@ -61,7 +68,7 @@ const Card = (props) => {
           </Text>
 
           <Icon
-            style={[{ paddingVertical: 0 }]}
+            style={[{ margin: 0 }]}
             typeName={props.types}
             calculateByType={props.calculateByType}
           />
@@ -72,9 +79,11 @@ const Card = (props) => {
             <TypeImage type={props.types} />
           </TouchableOpacity>
         ) : (
-          <TouchableOpacity style={styles.pokemonImage}>
-            <PokemonImage imageUrl={props.image} />
-          </TouchableOpacity>
+          <>
+            <TouchableOpacity style={styles.pokemonImage}>
+              <PokemonImage imageUrl={props.image} />
+            </TouchableOpacity>
+          </>
         )}
       </View>
     </LinearGradient>

@@ -26,109 +26,109 @@ const SIZE = 200
 const TypeImage = (props) => {
   const getTypeImage = (type, i) => {
     switch (type[0]) {
-      case 'Bug':
+      case 'bug':
         return (
           <TouchableOpacity style={styles.icon} key={i}>
             <Bug width={SIZE} height={SIZE} />
           </TouchableOpacity>
         )
-      case 'Dark':
+      case 'dark':
         return (
           <TouchableOpacity style={styles.icon} key={i}>
             <Dark width={SIZE} height={SIZE} />
           </TouchableOpacity>
         )
-      case 'Dragon':
+      case 'dragon':
         return (
           <TouchableOpacity style={styles.icon} key={i}>
             <Dragon width={SIZE} height={SIZE} />
           </TouchableOpacity>
         )
-      case 'Electric':
+      case 'electric':
         return (
           <TouchableOpacity style={styles.icon} key={i}>
             <Electric width={SIZE} height={SIZE} />
           </TouchableOpacity>
         )
-      case 'Fairy':
+      case 'fairy':
         return (
           <TouchableOpacity style={styles.icon} key={i}>
             <Fairy width={SIZE} height={SIZE} />
           </TouchableOpacity>
         )
-      case 'Fighting':
+      case 'fighting':
         return (
           <TouchableOpacity style={styles.icon} key={i}>
             <Fighting width={SIZE} height={SIZE} />
           </TouchableOpacity>
         )
-      case 'Fire':
+      case 'fire':
         return (
           <TouchableOpacity style={styles.icon} key={i}>
             <Fire width={SIZE} height={SIZE} />
           </TouchableOpacity>
         )
-      case 'Flying':
+      case 'flying':
         return (
           <TouchableOpacity style={styles.icon} key={i}>
             <Flying width={SIZE} height={SIZE} />
           </TouchableOpacity>
         )
-      case 'Ghost':
+      case 'ghost':
         return (
           <TouchableOpacity style={styles.icon} key={i}>
             <Ghost width={SIZE} height={SIZE} />
           </TouchableOpacity>
         )
-      case 'Grass':
+      case 'grass':
         return (
           <TouchableOpacity style={styles.icon} key={i}>
             <Grass width={SIZE} height={SIZE} />
           </TouchableOpacity>
         )
-      case 'Ground':
+      case 'ground':
         return (
           <TouchableOpacity style={styles.icon} key={i}>
             <Ground width={SIZE} height={SIZE} />
           </TouchableOpacity>
         )
-      case 'Ice':
+      case 'ice':
         return (
           <TouchableOpacity style={styles.icon} key={i}>
             <Ice width={SIZE} height={SIZE} />
           </TouchableOpacity>
         )
-      case 'Normal':
+      case 'normal':
         return (
           <TouchableOpacity style={styles.icon} key={i}>
             <Normal width={SIZE} height={SIZE} />
           </TouchableOpacity>
         )
-      case 'Poison':
+      case 'poison':
         return (
           <TouchableOpacity style={styles.icon} key={i}>
             <Poison width={SIZE} height={SIZE} />
           </TouchableOpacity>
         )
-      case 'Psychic':
+      case 'psychic':
         return (
           <TouchableOpacity style={styles.icon} key={i}>
             <Psychic width={SIZE} height={SIZE} />
           </TouchableOpacity>
         )
-      case 'Rock':
+      case 'rock':
         return (
           <TouchableOpacity style={styles.icon} key={i}>
             <Rock width={SIZE} height={SIZE} />
           </TouchableOpacity>
         )
-      case 'Steel':
+      case 'steel':
         return (
           <TouchableOpacity style={styles.icon} key={i}>
             <Steel width={SIZE} height={SIZE} />
           </TouchableOpacity>
         )
-      case 'Water':
+      case 'water':
         return (
           <TouchableOpacity style={styles.icon} key={i}>
             <Water width={SIZE} height={SIZE} />

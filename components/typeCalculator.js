@@ -12,30 +12,16 @@ import RNFadedScrollView from 'rn-faded-scrollview'
 import ScrollViewIndicator from 'react-native-scroll-indicator'
 
 import Icon from './typeIcon'
+import typesInOrder from './types'
 
 import { LinearGradient } from 'expo-linear-gradient'
 
 const TypeCalc = (props) => {
-  const typesInOrder = [
-    'Normal',
-    'Fire',
-    'Water',
-    'Electric',
-    'Grass',
-    'Ice',
-    'Fighting',
-    'Poison',
-    'Ground',
-    'Flying',
-    'Psychic',
-    'Bug',
-    'Rock',
-    'Ghost',
-    'Dragon',
-    'Dark',
-    'Steel',
-    'Fairy',
-  ]
+  /*
+    _ = neutral
+    H = not very effective
+    2 = super effective
+  */
   const _ = 1
   const H = 1 / 2
   const typeTable = [
@@ -133,25 +119,11 @@ const TypeCalc = (props) => {
     }
   }
 
-  const getComponents = (info) => {
-    switch (info) {
-      case 'Strong against':
-        return (
-          <View style={{ flexDirection: 'column' }}>
-            <Icon typeName={strongAgainstArray} calc={true} />
-          </View>
-        )
-      case 'Weak against':
-        return <Icon typeName={weakAgainstArray} calc={true} />
-      case 'Resistant to':
-        return <Icon typeName={resistanceArray} calc={true} />
-      case 'Vulnerable to':
-        return <Icon typeName={vulnerableArray} calc={true} />
-    }
-  }
-
   return (
-    <View>
+    <View
+      style={{
+        width: Dimensions.get('window').width,
+      }}>
       {createTypeArrays(props.typeName)}
 
       <Text style={commonStyles.calcHeading}>Strong against</Text>
@@ -162,7 +134,10 @@ const TypeCalc = (props) => {
           calculateByType={props.calculateByType}
         />
       </View>
-      <View style={styles.lineSeparator} />
+      <View style={styles.lineContainer}>
+        <View style={styles.lineSeparator} />
+      </View>
+
       <Text style={commonStyles.calcHeading}>Weak against</Text>
 
       <View style={styles.icon}>
@@ -171,7 +146,9 @@ const TypeCalc = (props) => {
           calculateByType={props.calculateByType}
         />
       </View>
-      <View style={styles.lineSeparator} />
+      <View style={styles.lineContainer}>
+        <View style={styles.lineSeparator} />
+      </View>
       <Text style={commonStyles.calcHeading}>Resistant to</Text>
 
       <View style={styles.icon}>
@@ -180,7 +157,9 @@ const TypeCalc = (props) => {
           calculateByType={props.calculateByType}
         />
       </View>
-      <View style={styles.lineSeparator} />
+      <View style={styles.lineContainer}>
+        <View style={styles.lineSeparator} />
+      </View>
       <Text style={commonStyles.calcHeading}>Vulnerable to</Text>
 
       <View style={styles.icon}>
@@ -197,14 +176,18 @@ export default TypeCalc
 
 const styles = StyleSheet.create({
   icon: {
-    marginBottom: 10,
+    marginBottom: 12,
+    paddingHorizontal: 10,
+  },
+  lineContainer: {
+    alignItems: 'center',
+    paddingHorizontal: 12,
   },
   lineSeparator: {
     borderBottomColor: 'black',
-    width: Dimensions.get('window').width,
-    alignItems: 'center',
-    justifyContent: 'center',
+    width: '100%',
+
     borderBottomWidth: StyleSheet.hairlineWidth,
-    marginBottom: 5,
+    marginVertical: 5,
   },
 })

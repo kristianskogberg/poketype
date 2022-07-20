@@ -1,8 +1,10 @@
 import { StyleSheet, StatusBar, Text, ScrollView, View } from 'react-native'
 import HomeScreen from './components/screens/HomeScreen'
 import commonStyles from './assets/styles/commonStyles'
-import { width, height } from './assets/constants'
-import RemoteDataSetExample from './components/autocomplete'
+import { maxScreenWidth, maxScreenHeight } from './assets/constants'
+import Auto from './components/autocomplete_v2'
+import AutoGit from './components/screens/autoGit'
+import { LocalDataSetExample } from './components/autoBold'
 
 export default function App() {
   return <HomeScreen />
