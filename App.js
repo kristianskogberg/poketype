@@ -1,20 +1,25 @@
-import { StyleSheet, StatusBar, Text, ScrollView, View } from 'react-native'
+import { StyleSheet, Text, View } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import { StatusBar } from 'expo-status-bar'
 import HomeScreen from './components/screens/HomeScreen'
 import commonStyles from './assets/styles/commonStyles'
 import { maxScreenWidth, maxScreenHeight } from './assets/constants'
-import Auto from './components/autocomplete_v2'
-import AutoGit from './components/screens/autoGit'
+import TTT from './components/screens/testNewScreen'
+import TestScreen from './components/screens/testScreen'
 import { LocalDataSetExample } from './components/autoBold'
 
 export default function App() {
-  return <HomeScreen />
-  //return <Test />
+  return (
+    <SafeAreaView style={{ flex: 1 }}>
+      <StatusBar style="auto" />
+      <HomeScreen />
+    </SafeAreaView>
+  )
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 100,
   },
   scrollView: {
     backgroundColor: 'pink',

@@ -11,16 +11,16 @@ import {
   TouchableOpacity,
   Dimensions,
   ScrollView,
-  StatusBar,
-  Keyboard,
 } from 'react-native'
+import { StatusBar } from 'expo-status-bar'
+import { SafeAreaView } from 'react-native-safe-area-context'
 import commonStyles from '../../assets/styles/commonStyles'
 import TypeCalc from '../typeCalculator'
 import { AutocompleteDropdown } from 'react-native-autocomplete-dropdown'
 import { textColor } from '../../assets/colors'
 import Card from '../card'
+import Search from '../../assets/images/search.svg'
 
-import { SafeAreaView } from 'react-native-safe-area-context'
 import allTypes from '../types'
 import { KeyboardAvoidingView } from 'react-native-web'
 
@@ -212,7 +212,7 @@ export default function HomeScreen() {
   }
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       {pokemonData ? (
         <>
           <View style={{ zIndex: 1 }}>{getLabels()}</View>
@@ -220,20 +220,23 @@ export default function HomeScreen() {
           <View
             style={{
               zIndex: 10,
-              width: Dimensions.get('window').width - 40,
+              width: Dimensions.get('window').width - 60,
             }}>
             <AutocompleteDropdown
               dataSet={pokemonData}
               inputContainerStyle={{
                 backgroundColor: 'transparent',
                 //width: Dimensions.get('window').width - 60,
-                marginVertical: 0,
+                borderRadius: 5,
                 paddingVertical: 0,
+                backgroundColor: '#F2F2F2',
               }}
               listContainerStyle={{
                 height: pokemonData.length * 70,
-                marginVertical: 0,
-                paddingVertical: 0,
+                marginTop: 0,
+              }}
+              suggestionsListContainerStyle={{
+                marginTop: 0,
               }}
               controller={(controller) => {
                 searchRef.current = controller
@@ -324,7 +327,7 @@ export default function HomeScreen() {
           </View>
         </>
       ) : null}
-    </View>
+    </SafeAreaView>
   )
 }
 
@@ -334,7 +337,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'white',
     //marginTop: StatusBar.currentHeight,
-    marginTop: 50,
+    //marginTop: 40,
   },
   scrollView: {
     backgroundColor: 'pink',
