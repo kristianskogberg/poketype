@@ -77,14 +77,14 @@ const Card = (props) => {
         {props.inputIsType ? (
           <TouchableOpacity
             style={styles.typeImage}
-            accessibilityLabel="Type Image">
+            accessibilityLabel="type image">
             <TypeImage type={props.types} />
           </TouchableOpacity>
         ) : (
           <>
             <TouchableOpacity
               style={styles.pokemonImage}
-              accessibilityLabel="Pokemon Image">
+              accessibilityLabel="pokemon image">
               <PokemonImage imageUrl={props.image} />
             </TouchableOpacity>
           </>
