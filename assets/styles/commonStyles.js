@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native'
-import { textColor } from '../colors'
+import { textColor } from '../utils/colors'
 
 export default StyleSheet.create({
   heading: {

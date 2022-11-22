@@ -43,7 +43,7 @@ const bgColor = {
 const textColor = {
   white: '#FFFFFF',
   black: '#17171B',
-  grey: '#747476',
+  grey: '#646464',
 }
 
 export { color, bgColor, textColor }

@@ -1,5 +1,6 @@
 import { StyleSheet, View, Image, ActivityIndicator } from 'react-native'
 import React, { useState } from 'react'
+import { bgColor, color } from '../assets/utils/colors'
 
 function PokemonImage(props) {
   ;[loading, setLoading] = useState(false)
@@ -23,6 +24,7 @@ function PokemonImage(props) {
           }}
           onLoadStart={() => onLoading(true)}
           onLoadEnd={() => onLoading(false)}
+          //tintColor={color.fire}
         />
       }
     </View>

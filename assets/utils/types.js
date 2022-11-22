@@ -1,4 +1,4 @@
-//DONT CHANGE THE ORDER!
+//DO NOT CHANGE THE ORDER!
 const types = [
   'normal',
   'fire',

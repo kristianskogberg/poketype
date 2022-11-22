@@ -11,184 +11,121 @@ import {
   TouchableOpacity,
   Dimensions,
   ScrollView,
+  KeyboardAvoidingView,
 } from 'react-native'
-import { StatusBar } from 'expo-status-bar'
+
+import axios from 'axios'
+
 import { SafeAreaView } from 'react-native-safe-area-context'
 import commonStyles from '../../assets/styles/commonStyles'
 import TypeCalc from '../typeCalculator'
 import { AutocompleteDropdown } from 'react-native-autocomplete-dropdown'
-import { textColor } from '../../assets/colors'
+import { textColor } from '../../assets/utils/colors'
 import Card from '../card'
-import Search from '../../assets/images/search.svg'
 
-import allTypes from '../types'
-import { KeyboardAvoidingView } from 'react-native-web'
+import allTypes from '../../assets/utils/types'
+import formatPokemonForms from '../../assets/utils/formatPokemonForms.json'
+import allPokemon from '../../assets/utils/pokemon.json'
+
+import { CapitalizeFirstLetter } from '../../assets/utils/capitalizeFirstLetter'
+import { formatPokedexNumber } from '../../assets/utils/formatPokedexNumber'
 
 const { height, width } = Dimensions.get('window')
 export default function HomeScreen() {
-  let [selectedItem, setSelectedItem] = useState('')
-  let [isLoading, setLoading] = useState(0)
-  let [searching, setSearching] = useState(false)
-  let [data, setData] = useState(null)
-  let [types, setTypes] = useState([])
-  let [pokedexNumber, setpokedexNumber] = useState(null)
-  let [name, setName] = useState('')
-  const [pokemonData, setPokemonData] = useState([])
-  const [imageUrl, setImageUrl] = useState('')
+  const [selectedItem, setSelectedItem] = useState('')
 
-  let [inputIsType, setInputIsType] = useState(false)
+  const [searching, setSearching] = useState(false)
+  const [data, setData] = useState(null)
+  const [types, setTypes] = useState([])
+  const [pokedexNumber, setPokedexNumber] = useState('')
+  const [name, setName] = useState('')
+  const [pokemonData, setPokemonData] = useState([])
+
+  const [inputIsType, setInputIsType] = useState(false)
 
   const searchRef = useRef(null)
   const [currentImage, setCurrentImage] = useState('')
 
-  const CapitalizeFirstLetter = (str) => {
-    return str.charAt(0).toUpperCase() + str.slice(1)
-  }
-
-  const calculateByType = (type) => {
+  function calculateByType(type) {
     setName(type)
     setTypes([type])
     setData(type)
     setInputIsType(true)
     searchRef.current.clear()
-    setLoading(false)
     setSearching(false)
   }
 
-  const pokemonFormConvert = {
-    'deoxys-normal': 'Deoxys',
-    'shaymin-land': 'Shaymin',
-    'wormadam-plant': 'Wormadam',
-    'giratina-altered': 'Giratina',
-    'basculin-red-striped': 'Basculin',
-    'darmanitan-standard': 'Darmanitan',
-    'tornadus-incarnate': 'Tornadus',
-    'thundurus-incarnate': 'Thundurus',
-    'landorus-incarnate': 'Landorus',
-    'keldeo-ordinary': 'Keldeo',
-    'meloetta-aria': 'Meloetta',
-    'meowstic-male': 'Meowstic',
-    'aegislash-shield': 'Aegislash',
-    'pumpkaboo-average': 'Pumpkaboo',
-    'gourgeist-average': 'Gourgeist',
-    'zygarde-50': 'Zygarde',
-    'oricorio-baile': 'Oricorio',
-    'lycanroc-midday': 'Lycanroc',
-    'wishiwashi-solo': 'Wishiwashi',
-    'minior-red-meteor': 'Minior',
-    'mimikyu-disguised': 'Mimikyu',
-    'toxtricity-amped': 'Toxtricity',
-    'eiscue-ice': 'Eiscue',
-    'indeedee-male': 'Indeedee',
-    'morpeko-full-belly': 'Morpeko',
-    'urshifu-single-strike': 'Urshifu',
+  function getPokemonNames() {
+    const convertedData = []
+
+    allPokemon['results'].forEach((pokemon) => {
+      // push all pokemon to the suggestions list
+      convertedData.push({
+        id: pokemon.url,
+        title: CapitalizeFirstLetter(pokemon.name),
+      })
+    })
+
+    // push types
+    allTypes.forEach((type) => {
+      convertedData.push({
+        id: type,
+        title: CapitalizeFirstLetter(type) + ' (Type)',
+      })
+    })
+
+    setPokemonData(convertedData)
   }
 
-  const fetchPokemonNames = async () => {
-    fetch('https://pokeapi.co/api/v2/pokemon/?limit=898')
-      .then((res) => {
-        return res.json()
-      })
-      .then((result) => {
-        const data = result['results']
-        //console.log(a)
-        convertedData = []
-
-        data.forEach((pokemon) => {
-          const number = pokemon.url.substr(34)
-          const numberFinal = number.substr(0, number.length - 1)
-          //console.log(numberFinal)
-
-          // push all pokemon
-          if (pokemon.name in pokemonFormConvert) {
-            convertedData.push({
-              id: pokemon.url,
-              title: pokemonFormConvert[pokemon.name],
-            })
-          } else {
-            convertedData.push({
-              id: pokemon.url,
-              title: CapitalizeFirstLetter(pokemon.name),
-            })
-          }
-        })
-
-        // push types
-        allTypes.forEach((type) => {
-          convertedData.push({
-            id: type,
-            title: CapitalizeFirstLetter(type) + ' (Type)',
-          })
-        })
-
-        setPokemonData(convertedData)
-      })
-      .catch((err) => {
-        console.error(err)
-      })
-  }
-
-  const fetchPokemonData = (query) => {
+  async function fetchPokemonData(query, name) {
     if (typeof query !== 'undefined') {
       setInputIsType(false)
-      fetch(query)
-        .then((res) => {
-          return res.json()
-        })
-        .then(
-          (result) => {
-            setCurrentImage(
-              result['sprites']['other']['official-artwork']['front_default']
-            )
+      const response = await axios.get(query)
+      const result = response.data
 
-            setpokedexNumber('#' + result['id'])
-            setImageUrl(
-              result['sprites']['other']['official-artwork']['front_default']
-            )
+      const speciesResponse = await axios.get(result.species.url)
 
-            let typeArray = []
-            for (var i in result.types) typeArray.push([i, result.types[i]])
+      setCurrentImage(
+        result['sprites']['other']['official-artwork']['front_default']
+      )
 
-            setName(result['species']['name'])
-            setTypes([])
+      const pokedexNumber = formatPokedexNumber(
+        speciesResponse.data.pokedex_numbers[0].entry_number
+      )
 
-            for (var i in typeArray) {
-              //setTypes.push(result.types[i].type.name)
-              setTypes((types) => [...types, result.types[i].type.name])
-            }
-            setSearching(false)
-            setLoading(false)
+      setPokedexNumber('#' + pokedexNumber)
 
-            setData(result)
-            searchRef.current.clear()
-          },
-          (error) => {
-            Alert.alert('Oops!', 'Could not find that Pokémon.')
-            setData('')
-            setLoading(false)
-            setSearching(false)
-          }
-        )
+      setName(result['species']['name'])
+      setTypes([])
+
+      for (let i = 0; i < result.types.length; i++) {
+        setTypes((types) => [...types, result.types[i].type.name])
+      }
+      setSearching(false)
+
+      setData(result)
+      searchRef.current.clear()
     }
   }
 
   useEffect(() => {
     setData('')
     setSearching(false)
-    fetchPokemonNames()
+    getPokemonNames()
   }, [])
 
   useEffect(() => {
     if (selectedItem !== null && typeof selectedItem !== 'string') {
       setSearching(true)
-      const input = selectedItem['id']
+      const url = selectedItem['id']
+      const name = selectedItem['title']
 
       //check if input is a type
-      if (allTypes.includes(input)) {
-        calculateByType(input)
+      if (allTypes.includes(url)) {
+        calculateByType(url)
         return
       }
-      fetchPokemonData(input)
+      fetchPokemonData(url, name)
     }
   }, [selectedItem])
 
@@ -197,7 +134,7 @@ export default function HomeScreen() {
       return (
         <View style={{ justifyContent: 'center', alignItems: 'center' }}>
           <Image
-            style={{ width: 100, height: 100, margin: 10 }}
+            style={{ width: 120, height: 120, margin: 10 }}
             source={require('../../assets/icon-transparent.png')}
           />
           <Text style={commonStyles.heading}>PokeType</Text>
@@ -206,6 +143,16 @@ export default function HomeScreen() {
             Search for a Pokémon by name or type to view its strengths and
             weaknesses.
           </Text>
+        </View>
+      )
+    }
+  }
+
+  const getFooter = () => {
+    if (!data) {
+      return (
+        <View style={{ position: 'absolute', bottom: 0, alignItems: 'center' }}>
+          <Text style={commonStyles.footer}>Powered by PokeAPI</Text>
         </View>
       )
     }
@@ -284,7 +231,7 @@ export default function HomeScreen() {
                           pokemonName={CapitalizeFirstLetter(name)}
                           //image={currentImage}
                           types={types}
-                          pokedexNumber={'Type:'}
+                          pokedexNumber={'Type'}
                           inputIsType={true}
                           calculateByType={calculateByType}
                         />
@@ -327,6 +274,7 @@ export default function HomeScreen() {
           </View>
         </>
       ) : null}
+      {getFooter()}
     </SafeAreaView>
   )
 }

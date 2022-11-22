@@ -21,7 +21,7 @@ import Rock from '../assets/images/type_icons/rock.svg'
 import Steel from '../assets/images/type_icons/steel.svg'
 import Water from '../assets/images/type_icons/water.svg'
 
-import { textColor } from '../assets/colors'
+import { textColor } from '../assets/utils/colors'
 
 const SCALE_MULTIPLIER = 1.3
 const HEIGHT = 25
@@ -34,235 +34,253 @@ const Icon = (props) => {
           <TouchableOpacity
             style={styles.icon}
             onPress={() => props.calculateByType(type)}
-            key={i}>
+            key={i}
+            accessibilityLabel={type + ' Icon'}>
             <Bug
               width={SCALE_MULTIPLIER * 51}
               height={SCALE_MULTIPLIER * HEIGHT}
             />
           </TouchableOpacity>
         )
-        break
+
       case 'dark':
         return (
           <TouchableOpacity
             style={styles.icon}
             onPress={() => props.calculateByType(type)}
-            key={i}>
+            key={i}
+            accessibilityLabel={type + ' Icon'}>
             <Dark
               width={SCALE_MULTIPLIER * 55}
               height={SCALE_MULTIPLIER * HEIGHT}
             />
           </TouchableOpacity>
         )
-        break
+
       case 'dragon':
         return (
           <TouchableOpacity
             style={styles.icon}
             onPress={() => props.calculateByType(type)}
-            key={i}>
+            key={i}
+            accessibilityLabel={type + ' Icon'}>
             <Dragon
               width={SCALE_MULTIPLIER * 69}
               height={SCALE_MULTIPLIER * HEIGHT}
             />
           </TouchableOpacity>
         )
-        break
+
       case 'electric':
         return (
           <TouchableOpacity
             style={styles.icon}
             onPress={() => props.calculateByType(type)}
-            key={i}>
+            key={i}
+            accessibilityLabel={type + ' Icon'}>
             <Electric
               width={SCALE_MULTIPLIER * 69}
               height={SCALE_MULTIPLIER * HEIGHT}
             />
           </TouchableOpacity>
         )
-        break
+
       case 'fairy':
         return (
           <TouchableOpacity
             style={styles.icon}
             onPress={() => props.calculateByType(type)}
-            key={i}>
+            key={i}
+            accessibilityLabel={type + ' Icon'}>
             <Fairy
               width={SCALE_MULTIPLIER * 55}
               height={SCALE_MULTIPLIER * HEIGHT}
             />
           </TouchableOpacity>
         )
-        break
+
       case 'fighting':
         return (
           <TouchableOpacity
             style={styles.icon}
             onPress={() => props.calculateByType(type)}
-            key={i}>
+            key={i}
+            accessibilityLabel={type + ' Icon'}>
             <Fighting
               width={SCALE_MULTIPLIER * 73}
               height={SCALE_MULTIPLIER * HEIGHT}
             />
           </TouchableOpacity>
         )
-        break
+
       case 'fire':
         return (
           <TouchableOpacity
             style={styles.icon}
             onPress={() => props.calculateByType(type)}
-            key={i}>
+            key={i}
+            accessibilityLabel={type + ' Icon'}>
             <Fire
               width={SCALE_MULTIPLIER * 50}
               height={SCALE_MULTIPLIER * HEIGHT}
             />
           </TouchableOpacity>
         )
-        break
+
       case 'flying':
         return (
           <TouchableOpacity
             style={styles.icon}
             onPress={() => props.calculateByType(type)}
-            key={i}>
+            key={i}
+            accessibilityLabel={type + ' Icon'}>
             <Flying
               width={SCALE_MULTIPLIER * 62}
               height={SCALE_MULTIPLIER * HEIGHT}
             />
           </TouchableOpacity>
         )
-        break
+
       case 'ghost':
         return (
           <TouchableOpacity
             style={styles.icon}
             onPress={() => props.calculateByType(type)}
-            key={i}>
+            key={i}
+            accessibilityLabel={type + ' Icon'}>
             <Ghost
               width={SCALE_MULTIPLIER * 62}
               height={SCALE_MULTIPLIER * HEIGHT}
             />
           </TouchableOpacity>
         )
-        break
+
       case 'grass':
         return (
           <TouchableOpacity
             style={styles.icon}
             onPress={() => props.calculateByType(type)}
-            key={i}>
+            key={i}
+            accessibilityLabel={type + ' Icon'}>
             <Grass
               width={SCALE_MULTIPLIER * 61}
               height={SCALE_MULTIPLIER * HEIGHT}
             />
           </TouchableOpacity>
         )
-        break
+
       case 'ground':
         return (
           <TouchableOpacity
             style={styles.icon}
             onPress={() => props.calculateByType(type)}
-            key={i}>
+            key={i}
+            accessibilityLabel={type + ' Icon'}>
             <Ground
               width={SCALE_MULTIPLIER * 69}
               height={SCALE_MULTIPLIER * HEIGHT}
             />
           </TouchableOpacity>
         )
-        break
+
       case 'ice':
         return (
           <TouchableOpacity
             style={styles.icon}
             onPress={() => props.calculateByType(type)}
-            key={i}>
+            key={i}
+            accessibilityLabel={type + ' Icon'}>
             <Ice
               width={SCALE_MULTIPLIER * 46}
               height={SCALE_MULTIPLIER * HEIGHT}
             />
           </TouchableOpacity>
         )
-        break
+
       case 'normal':
         return (
           <TouchableOpacity
             style={styles.icon}
             onPress={() => props.calculateByType(type)}
-            key={i}>
+            key={i}
+            accessibilityLabel={type + ' Icon'}>
             <Normal
               width={SCALE_MULTIPLIER * 68}
               height={SCALE_MULTIPLIER * HEIGHT}
             />
           </TouchableOpacity>
         )
-        break
+
       case 'poison':
         return (
           <TouchableOpacity
             style={styles.icon}
             onPress={() => props.calculateByType(type)}
-            key={i}>
+            key={i}
+            accessibilityLabel={type + ' Icon'}>
             <Poison
               width={SCALE_MULTIPLIER * 65}
               height={SCALE_MULTIPLIER * HEIGHT}
             />
           </TouchableOpacity>
         )
-        break
+
       case 'psychic':
         return (
           <TouchableOpacity
             style={styles.icon}
             onPress={() => props.calculateByType(type)}
-            key={i}>
+            key={i}
+            accessibilityLabel={type + ' Icon'}>
             <Psychic
               width={SCALE_MULTIPLIER * 71}
               height={SCALE_MULTIPLIER * HEIGHT}
             />
           </TouchableOpacity>
         )
-        break
+
       case 'rock':
         return (
           <TouchableOpacity
             style={styles.icon}
             onPress={() => props.calculateByType(type)}
-            key={i}>
+            key={i}
+            accessibilityLabel={type + ' Icon'}>
             <Rock
               width={SCALE_MULTIPLIER * 57}
               height={SCALE_MULTIPLIER * HEIGHT}
             />
           </TouchableOpacity>
         )
-        break
+
       case 'steel':
         return (
           <TouchableOpacity
             style={styles.icon}
             onPress={() => props.calculateByType(type)}
-            key={i}>
+            key={i}
+            accessibilityLabel={type + ' Icon'}>
             <Steel
               width={SCALE_MULTIPLIER * 57}
               height={SCALE_MULTIPLIER * HEIGHT}
             />
           </TouchableOpacity>
         )
-        break
+
       case 'water':
         return (
           <TouchableOpacity
             style={styles.icon}
             onPress={() => props.calculateByType(type)}
-            key={i}>
+            key={i}
+            accessibilityLabel={type + ' Icon'}>
             <Water
               width={SCALE_MULTIPLIER * 61}
               height={SCALE_MULTIPLIER * HEIGHT}
             />
           </TouchableOpacity>
         )
-        break
+
       default:
         return null
     }

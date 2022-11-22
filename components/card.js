@@ -11,7 +11,7 @@ import PokemonImage from './image'
 import commonStyles from '../assets/styles/commonStyles'
 import Icon from './typeIcon'
 const { height, width } = Dimensions.get('window')
-import { bgColor, textColor } from '../assets/colors'
+import { bgColor, textColor } from '../assets/utils/colors'
 import { LinearGradient } from 'expo-linear-gradient'
 import TypeImage from './typeImage'
 
@@ -75,12 +75,16 @@ const Card = (props) => {
         </View>
 
         {props.inputIsType ? (
-          <TouchableOpacity style={styles.typeImage}>
+          <TouchableOpacity
+            style={styles.typeImage}
+            accessibilityLabel="Type Image">
             <TypeImage type={props.types} />
           </TouchableOpacity>
         ) : (
           <>
-            <TouchableOpacity style={styles.pokemonImage}>
+            <TouchableOpacity
+              style={styles.pokemonImage}
+              accessibilityLabel="Pokemon Image">
               <PokemonImage imageUrl={props.image} />
             </TouchableOpacity>
           </>

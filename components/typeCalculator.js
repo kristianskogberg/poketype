@@ -1,20 +1,9 @@
-import React, { useState, useEffect } from 'react'
-import {
-  StyleSheet,
-  Text,
-  View,
-  ScrollView,
-  SafeAreaView,
-  Dimensions,
-} from 'react-native'
+import React from 'react'
+import { StyleSheet, Text, View, Dimensions } from 'react-native'
 import commonStyles from '../assets/styles/commonStyles'
-import RNFadedScrollView from 'rn-faded-scrollview'
-import ScrollViewIndicator from 'react-native-scroll-indicator'
 
 import Icon from './typeIcon'
-import typesInOrder from './types'
-
-import { LinearGradient } from 'expo-linear-gradient'
+import typesInOrder from '../assets/utils/types'
 
 const TypeCalc = (props) => {
   /*
