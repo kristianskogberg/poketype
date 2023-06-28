@@ -21,19 +21,23 @@ import Rock from '../assets/images/type_icons/rock.svg'
 import Steel from '../assets/images/type_icons/steel.svg'
 import Water from '../assets/images/type_icons/water.svg'
 
-import { textColor } from '../assets/utils/colors'
-
 const SCALE_MULTIPLIER = 1.3
 const HEIGHT = 25
 
-const Icon = (props) => {
+/**
+ * renders UI elements for each type
+ * @param {Array} typeArray
+ * @param {Function} calculateByType
+ * @returns
+ */
+const Icon = ({ typeArray, calculateByType }) => {
   const getTypeIcons = (type, i) => {
     switch (type) {
       case 'bug':
         return (
           <TouchableOpacity
             style={styles.icon}
-            onPress={() => props.calculateByType(type)}
+            onPress={() => calculateByType(type)}
             key={i}
             accessibilityLabel={type + ' Icon'}>
             <Bug
@@ -47,7 +51,7 @@ const Icon = (props) => {
         return (
           <TouchableOpacity
             style={styles.icon}
-            onPress={() => props.calculateByType(type)}
+            onPress={() => calculateByType(type)}
             key={i}
             accessibilityLabel={type + ' Icon'}>
             <Dark
@@ -61,7 +65,7 @@ const Icon = (props) => {
         return (
           <TouchableOpacity
             style={styles.icon}
-            onPress={() => props.calculateByType(type)}
+            onPress={() => calculateByType(type)}
             key={i}
             accessibilityLabel={type + ' Icon'}>
             <Dragon
@@ -75,7 +79,7 @@ const Icon = (props) => {
         return (
           <TouchableOpacity
             style={styles.icon}
-            onPress={() => props.calculateByType(type)}
+            onPress={() => calculateByType(type)}
             key={i}
             accessibilityLabel={type + ' Icon'}>
             <Electric
@@ -89,7 +93,7 @@ const Icon = (props) => {
         return (
           <TouchableOpacity
             style={styles.icon}
-            onPress={() => props.calculateByType(type)}
+            onPress={() => calculateByType(type)}
             key={i}
             accessibilityLabel={type + ' Icon'}>
             <Fairy
@@ -103,7 +107,7 @@ const Icon = (props) => {
         return (
           <TouchableOpacity
             style={styles.icon}
-            onPress={() => props.calculateByType(type)}
+            onPress={() => calculateByType(type)}
             key={i}
             accessibilityLabel={type + ' Icon'}>
             <Fighting
@@ -117,7 +121,7 @@ const Icon = (props) => {
         return (
           <TouchableOpacity
             style={styles.icon}
-            onPress={() => props.calculateByType(type)}
+            onPress={() => calculateByType(type)}
             key={i}
             accessibilityLabel={type + ' Icon'}>
             <Fire
@@ -131,7 +135,7 @@ const Icon = (props) => {
         return (
           <TouchableOpacity
             style={styles.icon}
-            onPress={() => props.calculateByType(type)}
+            onPress={() => calculateByType(type)}
             key={i}
             accessibilityLabel={type + ' Icon'}>
             <Flying
@@ -145,7 +149,7 @@ const Icon = (props) => {
         return (
           <TouchableOpacity
             style={styles.icon}
-            onPress={() => props.calculateByType(type)}
+            onPress={() => calculateByType(type)}
             key={i}
             accessibilityLabel={type + ' Icon'}>
             <Ghost
@@ -159,7 +163,7 @@ const Icon = (props) => {
         return (
           <TouchableOpacity
             style={styles.icon}
-            onPress={() => props.calculateByType(type)}
+            onPress={() => calculateByType(type)}
             key={i}
             accessibilityLabel={type + ' Icon'}>
             <Grass
@@ -173,7 +177,7 @@ const Icon = (props) => {
         return (
           <TouchableOpacity
             style={styles.icon}
-            onPress={() => props.calculateByType(type)}
+            onPress={() => calculateByType(type)}
             key={i}
             accessibilityLabel={type + ' Icon'}>
             <Ground
@@ -187,7 +191,7 @@ const Icon = (props) => {
         return (
           <TouchableOpacity
             style={styles.icon}
-            onPress={() => props.calculateByType(type)}
+            onPress={() => calculateByType(type)}
             key={i}
             accessibilityLabel={type + ' Icon'}>
             <Ice
@@ -201,7 +205,7 @@ const Icon = (props) => {
         return (
           <TouchableOpacity
             style={styles.icon}
-            onPress={() => props.calculateByType(type)}
+            onPress={() => calculateByType(type)}
             key={i}
             accessibilityLabel={type + ' Icon'}>
             <Normal
@@ -215,7 +219,7 @@ const Icon = (props) => {
         return (
           <TouchableOpacity
             style={styles.icon}
-            onPress={() => props.calculateByType(type)}
+            onPress={() => calculateByType(type)}
             key={i}
             accessibilityLabel={type + ' Icon'}>
             <Poison
@@ -229,7 +233,7 @@ const Icon = (props) => {
         return (
           <TouchableOpacity
             style={styles.icon}
-            onPress={() => props.calculateByType(type)}
+            onPress={() => calculateByType(type)}
             key={i}
             accessibilityLabel={type + ' Icon'}>
             <Psychic
@@ -243,7 +247,7 @@ const Icon = (props) => {
         return (
           <TouchableOpacity
             style={styles.icon}
-            onPress={() => props.calculateByType(type)}
+            onPress={() => calculateByType(type)}
             key={i}
             accessibilityLabel={type + ' Icon'}>
             <Rock
@@ -257,7 +261,7 @@ const Icon = (props) => {
         return (
           <TouchableOpacity
             style={styles.icon}
-            onPress={() => props.calculateByType(type)}
+            onPress={() => calculateByType(type)}
             key={i}
             accessibilityLabel={type + ' Icon'}>
             <Steel
@@ -271,7 +275,7 @@ const Icon = (props) => {
         return (
           <TouchableOpacity
             style={styles.icon}
-            onPress={() => props.calculateByType(type)}
+            onPress={() => calculateByType(type)}
             key={i}
             accessibilityLabel={type + ' Icon'}>
             <Water
@@ -286,19 +290,20 @@ const Icon = (props) => {
     }
   }
 
-  const getComponents = (typeArray) => {
-    const comps = []
-    typeArray.forEach((type, i) => {
-      comps.push(getTypeIcons(type, i))
+  /**
+   *
+   * @returns Array of TouchableOpacity components for types
+   */
+  const getComponents = () => {
+    const typeComponents = []
+    typeArray?.forEach((type, i) => {
+      typeComponents.push(getTypeIcons(type, i))
     })
-    return comps
+
+    return typeComponents
   }
-  /*
-  if (props.typeName === undefined || props.typeName.length == 0) {
-    return <Text>Joo</Text>
-  }
-  */
-  return <View style={styles.icon}>{getComponents(props.typeName)}</View>
+
+  return <View style={styles.icon}>{getComponents()}</View>
 }
 
 export default Icon

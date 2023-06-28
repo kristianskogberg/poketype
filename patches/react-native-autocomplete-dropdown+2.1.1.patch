@@ -1,0 +1,12 @@
+diff --git a/node_modules/react-native-autocomplete-dropdown/src/Dropdown.js b/node_modules/react-native-autocomplete-dropdown/src/Dropdown.js
+index 003dc6d..9ae27b5 100644
+--- a/node_modules/react-native-autocomplete-dropdown/src/Dropdown.js
++++ b/node_modules/react-native-autocomplete-dropdown/src/Dropdown.js
+@@ -1,5 +1,6 @@
+ import React, { memo, useMemo } from 'react'
+-import { StyleSheet, FlatList, View, Keyboard } from 'react-native'
++import { StyleSheet, View, Keyboard } from 'react-native'
++import { FlatList } from 'react-native-gesture-handler';
+ 
+ export const Dropdown = memo(
+   ({

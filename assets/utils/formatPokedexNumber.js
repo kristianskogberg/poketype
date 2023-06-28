@@ -1,3 +1,8 @@
+/**
+ * format the Pokedex number with a hashtag and zeros if needed
+ * @param {Number} number
+ * @returns formatted number as a String (ex. #001)
+ */
 export const formatPokedexNumber = (number) => {
   let formatNumber = ''
   const numberString = number.toString()

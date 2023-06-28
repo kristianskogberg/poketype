@@ -1,9 +1,15 @@
 import { StyleSheet, View, Image, ActivityIndicator } from 'react-native'
 import React, { useState } from 'react'
-import { bgColor, color } from '../assets/utils/colors'
 
-function PokemonImage(props) {
-  ;[loading, setLoading] = useState(false)
+/**
+ * Image component for Pokemon images
+ * displays a loading spinner until
+ * the image is fully loaded
+ * @param {String} imageUrl
+ * @returns
+ */
+function PokemonImage({ imageUrl }) {
+  const [loading, setLoading] = useState(false)
 
   function onLoading(value) {
     setLoading(value)
@@ -20,7 +26,7 @@ function PokemonImage(props) {
         <Image
           style={styles.image}
           source={{
-            uri: props.imageUrl,
+            uri: imageUrl,
           }}
           onLoadStart={() => onLoading(true)}
           onLoadEnd={() => onLoading(false)}

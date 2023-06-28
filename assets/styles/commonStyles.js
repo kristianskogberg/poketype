@@ -7,7 +7,7 @@ export default StyleSheet.create({
     fontWeight: 'bold',
     color: textColor.black,
     padding: 5,
-    textAlign: 'center',
+    textAlign: 'left',
   },
   headingNumber: {
     fontSize: 28,
@@ -18,7 +18,7 @@ export default StyleSheet.create({
     fontSize: 16,
     color: textColor.grey,
     alignItems: 'center',
-    textAlign: 'center',
+    textAlign: 'left',
     padding: 10,
   },
   calcHeading: {

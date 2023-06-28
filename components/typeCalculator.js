@@ -1,127 +1,125 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { StyleSheet, Text, View, Dimensions } from 'react-native'
 import commonStyles from '../assets/styles/commonStyles'
 
 import Icon from './typeIcon'
-import typesInOrder from '../assets/utils/types'
+import { allTypes, typeMatrix } from '../assets/utils/types'
 
-const TypeCalc = (props) => {
-  /*
-    _ = neutral
-    H = not very effective
-    2 = super effective
-  */
-  const _ = 1
-  const H = 1 / 2
-  const typeTable = [
-    [_, _, _, _, _, _, _, _, _, _, _, _, H, 0, _, _, H, _],
-    [_, H, H, _, 2, 2, _, _, _, _, _, 2, H, _, H, _, 2, _],
-    [_, 2, H, _, H, _, _, _, 2, _, _, _, 2, _, H, _, _, _],
-    [_, _, 2, H, H, _, _, _, 0, 2, _, _, _, _, H, _, _, _],
-    [_, H, 2, _, H, _, _, H, 2, H, _, H, 2, _, H, _, H, _],
-    [_, H, H, _, 2, H, _, _, 2, 2, _, _, _, _, 2, _, H, _],
-    [2, _, _, _, _, 2, _, H, _, H, H, H, 2, 0, _, 2, 2, H],
-    [_, _, _, _, 2, _, _, H, H, _, _, _, H, H, _, _, 0, 2],
-    [_, 2, _, 2, H, _, _, 2, _, 0, _, H, 2, _, _, _, 2, _],
-    [_, _, _, H, 2, _, 2, _, _, _, _, 2, H, _, _, _, H, _],
-    [_, _, _, _, _, _, 2, 2, _, _, H, _, _, _, _, 0, H, _],
-    [_, H, _, _, 2, _, H, H, _, H, 2, _, _, H, _, 2, H, H],
-    [_, 2, _, _, _, 2, H, _, H, 2, _, 2, _, _, _, _, H, _],
-    [0, _, _, _, _, _, _, _, _, _, 2, _, _, 2, _, H, _, _],
-    [_, _, _, _, _, _, _, _, _, _, _, _, _, _, 2, _, H, 0],
-    [_, _, _, _, _, _, H, _, _, _, 2, _, _, 2, _, H, _, H],
-    [_, H, H, H, _, 2, _, _, _, _, _, _, 2, _, _, _, H, 2],
-    [_, H, _, _, _, _, 2, H, _, _, _, _, _, _, 2, 2, H, _],
-  ]
+const TypeCalc = ({ typeArray, calculateByType }) => {
+  const [strengths, setStrengths] = useState([])
+  const [weaknesses, setWeaknesses] = useState([])
+  const [resistances, setResistances] = useState([])
+  const [vulnerabilities, setVulnerabilities] = useState([])
 
-  let vulnerableArray = []
-  let resistanceArray = []
-  let strongAgainstArray = []
-  let weakAgainstArray = []
+  /**
+   * Calculates strenghts, weaknesses, resistances
+   * and vulnerabilities based on the Pokemon's type(s)
+   */
+  const calculateTypeEffectivenesses = () => {
+    setStrengths([])
+    setWeaknesses([])
+    setResistances([])
+    setVulnerabilities([])
 
-  const createTypeArrays = (typeArray) => {
-    let typeIndex
-    let typeIndexSec
-    let dualType
+    let secondaryTypeIndex
+    const primaryTypeReverseEffectivenesses = []
 
-    typeArray.forEach((type, index) => {
-      if (index == 0) {
-        typeIndex = typesInOrder.indexOf(type)
-      } else {
-        typeIndexSec = typesInOrder.indexOf(type)
-        dualType = true
-      }
-    })
-    let typeA = typeTable[typeIndex]
-    let typeAFlip = []
-
-    for (let i = 0; i < typeTable.length; i++) {
-      typeAFlip.push(typeTable[i][typeIndex])
+    // set index from the matrix based on the Pokemon's types
+    const primaryTypeIndex = allTypes.indexOf(typeArray[0])
+    if (typeArray.length === 2) {
+      // contains two types
+      secondaryTypeIndex = allTypes.indexOf(typeArray[1])
     }
 
-    for (let i = 0; i < typeA.length; i++) {
-      let multiplier = typeA[i]
+    const primaryTypeEffectivenesses = typeMatrix[primaryTypeIndex]
+
+    // create another array for calculating strengths and weaknesses for the primary type
+    for (let i = 0; i < typeMatrix.length; i++) {
+      primaryTypeReverseEffectivenesses.push(typeMatrix[i][primaryTypeIndex])
+    }
+
+    // calculate strengths and weaknesses
+    for (let i = 0; i < primaryTypeEffectivenesses?.length; i++) {
+      let multiplier = primaryTypeEffectivenesses[i]
       if (multiplier >= 2) {
-        strongAgainstArray.push(typesInOrder[i])
+        setStrengths((current) => [...current, allTypes[i]])
       } else if (multiplier < 1) {
-        weakAgainstArray.push(typesInOrder[i])
+        setWeaknesses((current) => [...current, allTypes[i]])
       }
     }
-    for (let i = 0; i < typeAFlip.length; i++) {
-      let multiplier = typeAFlip[i]
+
+    // calculate vulnerabilities and resistances
+    for (let i = 0; i < primaryTypeReverseEffectivenesses.length; i++) {
+      let multiplier = primaryTypeReverseEffectivenesses[i]
       if (multiplier >= 2) {
-        vulnerableArray.push(typesInOrder[i])
+        setVulnerabilities((current) => [...current, allTypes[i]])
       } else if (multiplier < 1) {
-        resistanceArray.push(typesInOrder[i])
+        setResistances((current) => [...current, allTypes[i]])
       }
     }
 
-    if (dualType) {
-      let typeB = typeTable[typeIndexSec]
-      let typeBFlip = []
-      vulnerableArray = []
-      resistanceArray = []
-      strongAgainstArray = []
-      weakAgainstArray = []
+    if (typeArray.length === 2) {
+      // Pokemon has two types
+      setStrengths([])
+      setWeaknesses([])
+      setResistances([])
+      setVulnerabilities([])
 
-      for (let i = 0; i < typeTable.length; i++) {
-        typeAFlip.push(typeTable[i][typeIndex])
-        typeBFlip.push(typeTable[i][typeIndexSec])
+      let secondaryTypeEffectivenesses = typeMatrix[secondaryTypeIndex]
+      let secondaryTypeReverseEffectivenesses = []
+
+      // create another array for calculating strengths and weaknesses for both types
+      for (let i = 0; i < typeMatrix.length; i++) {
+        primaryTypeReverseEffectivenesses.push(typeMatrix[i][primaryTypeIndex])
+        secondaryTypeReverseEffectivenesses.push(
+          typeMatrix[i][secondaryTypeIndex]
+        )
       }
 
-      for (let i = 0; i < typeA.length; i++) {
-        let multiplier = typeA[i] * typeB[i]
+      // calculate strengths and weaknesses
+      // considering both primary and secondary types
+      for (let i = 0; i < primaryTypeEffectivenesses.length; i++) {
+        let multiplier =
+          primaryTypeEffectivenesses[i] * secondaryTypeEffectivenesses[i]
         if (multiplier >= 2) {
-          strongAgainstArray.push(typesInOrder[i])
+          setStrengths((current) => [...current, allTypes[i]])
         } else if (multiplier < 0.5) {
-          weakAgainstArray.push(typesInOrder[i])
+          setWeaknesses((current) => [...current, allTypes[i]])
         }
       }
-      for (let i = 0; i < typeAFlip.length; i++) {
-        let multiplier = typeAFlip[i] * typeBFlip[i]
+
+      // calculate vulnerabilities and resistances
+      // considering both primary and secondary types
+      for (let i = 0; i < primaryTypeReverseEffectivenesses.length; i++) {
+        let multiplier =
+          primaryTypeReverseEffectivenesses[i] *
+          secondaryTypeReverseEffectivenesses[i]
         if (multiplier >= 2) {
-          vulnerableArray.push(typesInOrder[i])
+          setVulnerabilities((current) => [...current, allTypes[i]])
         } else if (multiplier < 1) {
-          resistanceArray.push(typesInOrder[i])
+          setResistances((current) => [...current, allTypes[i]])
         }
       }
     }
   }
+
+  useEffect(() => {
+    // return if typeArray is null
+    if (!typeArray) return
+
+    // otherwise calculate
+    calculateTypeEffectivenesses()
+  }, [typeArray])
 
   return (
     <View
       style={{
         width: Dimensions.get('window').width,
       }}>
-      {createTypeArrays(props.typeName)}
-
       <Text style={commonStyles.calcHeading}>Strong against</Text>
 
       <View style={styles.icon}>
-        <Icon
-          typeName={strongAgainstArray}
-          calculateByType={props.calculateByType}
-        />
+        <Icon typeArray={strengths} calculateByType={calculateByType} />
       </View>
       <View style={styles.lineContainer}>
         <View style={styles.lineSeparator} />
@@ -130,10 +128,7 @@ const TypeCalc = (props) => {
       <Text style={commonStyles.calcHeading}>Weak against</Text>
 
       <View style={styles.icon}>
-        <Icon
-          typeName={weakAgainstArray}
-          calculateByType={props.calculateByType}
-        />
+        <Icon typeArray={weaknesses} calculateByType={calculateByType} />
       </View>
       <View style={styles.lineContainer}>
         <View style={styles.lineSeparator} />
@@ -141,10 +136,7 @@ const TypeCalc = (props) => {
       <Text style={commonStyles.calcHeading}>Resistant to</Text>
 
       <View style={styles.icon}>
-        <Icon
-          typeName={resistanceArray}
-          calculateByType={props.calculateByType}
-        />
+        <Icon typeArray={resistances} calculateByType={calculateByType} />
       </View>
       <View style={styles.lineContainer}>
         <View style={styles.lineSeparator} />
@@ -152,10 +144,7 @@ const TypeCalc = (props) => {
       <Text style={commonStyles.calcHeading}>Vulnerable to</Text>
 
       <View style={styles.icon}>
-        <Icon
-          typeName={vulnerableArray}
-          calculateByType={props.calculateByType}
-        />
+        <Icon typeArray={vulnerabilities} calculateByType={calculateByType} />
       </View>
     </View>
   )
@@ -173,9 +162,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
   },
   lineSeparator: {
-    borderBottomColor: 'black',
+    borderBottomColor: 'gray',
     width: '100%',
-
+    paddingHorizontal: 12,
     borderBottomWidth: StyleSheet.hairlineWidth,
     marginVertical: 5,
   },

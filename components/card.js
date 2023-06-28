@@ -17,6 +17,11 @@ import TypeImage from './typeImage'
 
 import PokeBall from '../assets/images/pokeball.svg'
 
+/**
+ * renders a card UI element for a Pokemon / type
+ * @param {Object} props
+ * @returns
+ */
 const Card = (props) => {
   const typeColor = props.types[0]
 
@@ -43,51 +48,82 @@ const Card = (props) => {
         <PokeBall fill={'white'} width={SCALE * 207} height={SCALE * 104} />
       </View>
       <View style={styles.content}>
-        <View style={styles.textAndTypes}>
-          <Text
-            style={{
-              marginBottom: 0,
-              textAlign: 'left',
-              paddingLeft: 8,
-              paddingBottom: 0,
-              fontSize: 16,
-              color: textColor.grey,
-            }}>
-            {props.pokedexNumber}
-          </Text>
-          <Text
-            style={[
-              commonStyles.heading,
-              {
+        {props.pokedexNumber.toLowerCase() === 'type' ? (
+          <View style={styles.textAndTypes}>
+            <Text
+              style={{
                 marginBottom: 0,
                 textAlign: 'left',
-                paddingTop: 0,
-              },
-            ]}>
-            {props.pokemonName}
-          </Text>
+                paddingLeft: 8,
+                paddingBottom: 0,
+                fontSize: 16,
+                color: textColor.grey,
+              }}>
+              Type
+            </Text>
+            <Text
+              style={[
+                commonStyles.heading,
+                {
+                  marginBottom: 0,
+                  textAlign: 'left',
+                  paddingTop: 0,
+                },
+              ]}>
+              {props.pokemonName}
+            </Text>
 
-          <Icon
-            style={[{ margin: 0 }]}
-            typeName={props.types}
-            calculateByType={props.calculateByType}
-          />
-        </View>
+            <Icon
+              style={[{ margin: 0 }]}
+              typeArray={props.types}
+              calculateByType={props.calculateByType}
+            />
+          </View>
+        ) : (
+          <View style={styles.textAndTypes}>
+            <Text
+              style={{
+                marginBottom: 0,
+                textAlign: 'left',
+                paddingLeft: 8,
+                paddingBottom: 0,
+                fontSize: 16,
+                color: textColor.grey,
+              }}>
+              {props.pokedexNumber}
+            </Text>
+            <Text
+              style={[
+                commonStyles.heading,
+                {
+                  marginBottom: 0,
+                  textAlign: 'left',
+                  paddingTop: 0,
+                },
+              ]}>
+              {props.pokemonName}
+            </Text>
 
-        {props.inputIsType ? (
+            <Icon
+              style={[{ margin: 0 }]}
+              typeArray={props.types}
+              calculateByType={props.calculateByType}
+            />
+          </View>
+        )}
+
+        {props.image ? (
+          <TouchableOpacity
+            style={styles.pokemonImage}
+            accessibilityLabel="pokemon image">
+            <PokemonImage imageUrl={props.image} />
+          </TouchableOpacity>
+        ) : (
           <TouchableOpacity
             style={styles.typeImage}
             accessibilityLabel="type image">
             <TypeImage type={props.types} />
           </TouchableOpacity>
-        ) : (
-          <>
-            <TouchableOpacity
-              style={styles.pokemonImage}
-              accessibilityLabel="pokemon image">
-              <PokemonImage imageUrl={props.image} />
-            </TouchableOpacity>
-          </>
         )}
       </View>
     </LinearGradient>
