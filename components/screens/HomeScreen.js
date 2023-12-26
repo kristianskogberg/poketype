@@ -193,6 +193,7 @@ export default function HomeScreen() {
           backgroundColor: !data ? '#fff' : bgColor[types[0]],
           width: Dimensions.get('window').width,
           paddingHorizontal: 16,
+          paddingTop: 8,
         }}>
         <AutocompleteDropdown
           dataSet={pokemonData}
