@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 
 import {
   StyleSheet,
@@ -12,13 +12,11 @@ import {
 
 import axios from 'axios'
 
-import { SafeAreaView } from 'react-native-safe-area-context'
 import commonStyles from '../../assets/styles/commonStyles'
-import TypeCalc from '../typeCalculator'
+import TypeCalc from '../TypeCalculator'
 import { AutocompleteDropdown } from 'react-native-autocomplete-dropdown'
-import { textColor } from '../../assets/utils/colors'
-import Card from '../card'
-import { bgColor } from '../../assets/utils/colors'
+import { bgColor, textColor } from '../../assets/utils/colors'
+import Card from '../Card'
 import { allTypes } from '../../assets/utils/types'
 import allPokemon from '../../assets/utils/pokemon.json'
 import PokeBall from '../../assets/images/pokeball_grey.svg'
@@ -26,7 +24,17 @@ import { CapitalizeFirstLetter } from '../../assets/utils/capitalizeFirstLetter'
 import { formatPokedexNumber } from '../../assets/utils/formatPokedexNumber'
 import Footer from '../Footer'
 
-// Main UI component
+const pokemonSuggestions = [
+  ...allPokemon.results.map((p) => ({
+    id: p.url,
+    title: CapitalizeFirstLetter(p.name),
+  })),
+  ...allTypes.map((t) => ({
+    id: t,
+    title: CapitalizeFirstLetter(t) + ' (Type)',
+  })),
+]
+
 export default function HomeScreen() {
   const [selectedItem, setSelectedItem] = useState('')
 
@@ -35,143 +43,73 @@ export default function HomeScreen() {
   const [types, setTypes] = useState([])
   const [pokedexNumber, setPokedexNumber] = useState('')
   const [name, setName] = useState('')
-  const [pokemonData, setPokemonData] = useState([])
 
   const [error, setError] = useState(null)
   const searchRef = useRef(null)
   const [currentImage, setCurrentImage] = useState('')
 
-  /**
-   * when the app starts, get the names of all Pokemon from a JSON file
-   */
-  useEffect(() => {
-    setData(null)
-    setLoading(false)
-    getPokemonNames()
-  }, [])
-
-  /**
-   * get the names for each Pokemon and types and
-   * set them as the pokemonData state (for the suggestions list)
-   */
-  function getPokemonNames() {
-    // format the data first
-    const formattedData = []
-
-    allPokemon['results'].forEach((pokemon) => {
-      // push all pokemon to the suggestions list
-
-      formattedData.push({
-        id: pokemon.url,
-        title: CapitalizeFirstLetter(pokemon.name),
-      })
-    })
-
-    // push types
-    allTypes.forEach((type) => {
-      formattedData.push({
-        id: type,
-        title: CapitalizeFirstLetter(type) + ' (Type)',
-      })
-    })
-
-    setPokemonData(formattedData)
-  }
-
-  /**
-   * set the type name so that TypeCalc can perform calculations
-   * this function is only called when the user taps a type
-   * (either from the dropdown menu or taps a type element)
-   * @param {String} type
-   */
-  function calculateByType(typeName) {
+  const calculateByType = useCallback((typeName) => {
     setName(CapitalizeFirstLetter(typeName))
     setCurrentImage(null)
     setPokedexNumber('Type')
     setTypes([typeName])
     setData(typeName)
-
-    clearInputField()
-    setLoading(false)
-  }
-
-  function clearInputField() {
     searchRef.current.clear()
-  }
+    setLoading(false)
+  }, [])
 
-  /**
-   * Fetch data for the selected Pokemon using PokeAPI
-   * this function is only called when the user taps
-   * a name of a Pokemon from the dropdown list
-   * @returns data for the selected Pokemon
-   */
-  async function fetchPokemonData() {
-    const url = selectedItem['id']
-    setData(null)
-
-    if (!selectedItem['id']) return
-
-    // fetch data and catch possible errors
-    try {
-      setError(null)
-      setLoading(true)
-      const response = await axios.get(url)
-      const result = response.data
-
-      const speciesResponse = await axios.get(result.species.url)
-
-      setCurrentImage(
-        result['sprites']['other']['official-artwork']['front_default']
-      )
-
-      const pokedexNumber = formatPokedexNumber(
-        speciesResponse.data.pokedex_numbers[0].entry_number
-      )
-
-      setPokedexNumber('#' + pokedexNumber)
-
-      setName(CapitalizeFirstLetter(result['species']['name']))
-      setTypes([])
-
-      for (let i = 0; i < result.types.length; i++) {
-        setTypes((types) => [...types, result.types[i].type.name])
-      }
-      setLoading(false)
-
-      setData(result)
-      clearInputField()
-    } catch (error) {
-      // error happened
-      setError(error)
-      setLoading(false)
-    }
-  }
-
-  // execute every time the user taps a Pokemon or Type
-  // drom the dropdown menu
   useEffect(() => {
     if (!selectedItem) return
 
     setError(null)
 
-    // check if tapped item is a type
-    // if it is, it can be calculated without the API
     if (allTypes.includes(selectedItem['id'])) {
-      // input is type
       calculateByType(selectedItem['id'])
       return
     }
 
-    // input is a Pokemon, call the API with tapped Pokemon
-    fetchPokemonData()
-  }, [selectedItem])
+    const fetchPokemonData = async () => {
+      const url = selectedItem['id']
+      setData(null)
 
-  // return null until the JSON file has been loaded
-  // in getPokemonData()
-  if (!pokemonData) return null
+      if (!url) return
+
+      try {
+        setError(null)
+        setLoading(true)
+        const response = await axios.get(url)
+        const result = response.data
+
+        const speciesResponse = await axios.get(result.species.url)
+
+        setCurrentImage(
+          result['sprites']['other']['official-artwork']['front_default'],
+        )
+
+        const pokedexNum = formatPokedexNumber(
+          speciesResponse.data.pokedex_numbers[0].entry_number,
+        )
+
+        setPokedexNumber('#' + pokedexNum)
+        setName(CapitalizeFirstLetter(result['species']['name']))
+
+        const newTypes = result.types.map((t) => t.type.name)
+        setTypes(newTypes)
+
+        setLoading(false)
+        setData(result)
+        searchRef.current.clear()
+      } catch (err) {
+        setError(err)
+        setLoading(false)
+      }
+    }
+
+    fetchPokemonData()
+  }, [selectedItem, calculateByType])
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       {!data && !loading ? (
         <>
           <View style={{ justifyContent: 'center', alignItems: 'center' }}>
@@ -185,7 +123,6 @@ export default function HomeScreen() {
         </>
       ) : null}
 
-      {/* Pokemon Search / Dropdown menu */}
       <View
         style={{
           zIndex: 10,
@@ -196,17 +133,15 @@ export default function HomeScreen() {
           paddingTop: 8,
         }}>
         <AutocompleteDropdown
-          dataSet={pokemonData}
+          dataSet={pokemonSuggestions}
           inputContainerStyle={{
-            backgroundColor: 'transparent',
-            //width: Dimensions.get('window').width - 60,
+            backgroundColor: '#F2F2F2',
             borderRadius: 5,
             paddingVertical: 0,
-            backgroundColor: '#F2F2F2',
           }}
           flatListProps={{ scrollEnabled: true }}
           listContainerStyle={{
-            height: pokemonData.length * 70,
+            height: pokemonSuggestions.length * 70,
             marginTop: 0,
           }}
           suggestionsListContainerStyle={{
@@ -226,7 +161,6 @@ export default function HomeScreen() {
             placeholderTextColor: textColor.grey,
             style: {
               borderRadius: 100,
-              //color: textColor.black,
             },
           }}
           suggestionsListMaxHeight={Dimensions.get('window').height}
@@ -260,7 +194,6 @@ export default function HomeScreen() {
               image={currentImage}
               types={types}
               pokedexNumber={pokedexNumber}
-              inputIsType={true}
               calculateByType={calculateByType}
             />
 
@@ -278,7 +211,6 @@ export default function HomeScreen() {
         </ScrollView>
       ) : null}
 
-      {/* BACKGROUND */}
       {!data ? (
         <View
           style={{
@@ -294,7 +226,7 @@ export default function HomeScreen() {
           <PokeBall fill={'black'} width={200} height={200} />
         </View>
       ) : null}
-    </SafeAreaView>
+    </View>
   )
 }
 
@@ -303,40 +235,5 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     backgroundColor: 'white',
-    //marginTop: StatusBar.currentHeight,
-    //marginTop: 40,
-  },
-  scrollView: {
-    backgroundColor: 'pink',
-    marginHorizontal: 20,
-  },
-  maintext: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  searchContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    //borderWidth: 1,
-    padding: 8,
-    margin: 8,
-    width: '80%',
-    borderRadius: 10,
-    backgroundColor: '#F2F2F2',
-  },
-  input: {
-    flex: 1,
-    paddingLeft: 10,
-    color: '#424242',
-    fontSize: 16,
-  },
-  flatList: {
-    paddingLeft: 15,
-    marginTop: 15,
-    paddingBottom: 15,
-    fontSize: 18,
-    borderBottomColor: '#26a69a',
-    borderBottomWidth: 1,
   },
 })

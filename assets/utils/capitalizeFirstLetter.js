@@ -1,11 +1,8 @@
 export const CapitalizeFirstLetter = (str) => {
   if (!str) return
 
-  const words = str.split('-')
-
-  for (let i = 0; i < words.length; i++) {
-    words[i] = words[i][0].toUpperCase() + words[i].substr(1)
-  }
-
-  return words.join('-')
+  return str
+    .split('-')
+    .map((word) => word[0].toUpperCase() + word.slice(1))
+    .join('-')
 }

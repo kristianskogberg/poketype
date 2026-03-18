@@ -1,5 +1,5 @@
 import { StyleSheet, View, Image, ActivityIndicator } from 'react-native'
-import React, { useState } from 'react'
+import { useState } from 'react'
 
 /**
  * Image component for Pokemon images
@@ -30,7 +30,6 @@ function PokemonImage({ imageUrl }) {
           }}
           onLoadStart={() => onLoading(true)}
           onLoadEnd={() => onLoading(false)}
-          //tintColor={color.fire}
         />
       }
     </View>
