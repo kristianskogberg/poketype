@@ -18,6 +18,7 @@ import { addRecentSearch } from '../../assets/utils/useRecentSearches'
 import Footer from '../Footer'
 
 const ITEM_HEIGHT = 150
+const ITEM_GAP = 12
 const SEARCH_BAR_HEIGHT = 56
 const noop = () => {}
 
@@ -45,6 +46,7 @@ const CardItem = memo(
         pokedexNumber={item.pokedexNumber}
         calculateByType={noop}
         height={ITEM_HEIGHT}
+        variant="compact"
       />
     </Pressable>
   ),
@@ -97,8 +99,8 @@ export default function HomeScreen({ navigation }) {
 
   const getItemLayout = useCallback(
     (_, index) => ({
-      length: ITEM_HEIGHT,
-      offset: ITEM_HEIGHT * index,
+      length: ITEM_HEIGHT + ITEM_GAP,
+      offset: (ITEM_HEIGHT + ITEM_GAP) * index,
       index,
     }),
     [],
@@ -113,7 +115,7 @@ export default function HomeScreen({ navigation }) {
           keyExtractor={(item) => item.id}
           renderItem={renderItem}
           getItemLayout={getItemLayout}
-          contentContainerStyle={{ paddingTop: SEARCH_BAR_HEIGHT }}
+          contentContainerStyle={{ paddingTop: SEARCH_BAR_HEIGHT, gap: ITEM_GAP }}
           initialNumToRender={8}
           maxToRenderPerBatch={10}
           updateCellsBatchingPeriod={30}

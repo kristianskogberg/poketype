@@ -20,6 +20,7 @@ const Card = ({
   activeSegment,
   onSelectGenSegment,
   height = 200,
+  variant,
 }) => {
   const typeColor = types[0]
   const subtitle =
@@ -27,17 +28,23 @@ const Card = ({
 
   const SCALE = (height / 200) * 2
 
-  return (
-    <LinearGradient
-      style={{
-        justifyContent: 'center',
-        width: width,
-        height,
-        margin: 0,
-        zIndex: 10,
-        overflow: 'hidden',
-      }}
-      colors={[bgColor[typeColor], '#fff']}>
+  const isCompact = variant === 'compact'
+
+  const containerStyle = {
+    justifyContent: 'center',
+    width: isCompact ? width - 24 : width,
+    height,
+    margin: 0,
+    zIndex: 10,
+    overflow: 'hidden',
+    ...(isCompact && {
+      borderRadius: 16,
+      alignSelf: 'center',
+    }),
+  }
+
+  const inner = (
+    <>
       <View
         style={{
           position: 'absolute',
@@ -127,6 +134,17 @@ const Card = ({
           </Pressable>
         )}
       </View>
+    </>
+  )
+
+  return (
+    <LinearGradient
+      style={containerStyle}
+      colors={[
+        bgColor[typeColor],
+        isCompact ? bgColor[typeColor] + '80' : '#fff',
+      ]}>
+      {inner}
     </LinearGradient>
   )
 }
