@@ -7,7 +7,7 @@ import commonStyles from '../assets/styles/commonStyles'
  */
 export default function Footer() {
   return (
-    <View style={{ position: 'absolute', bottom: 0, alignItems: 'center' }}>
+    <View style={{ alignItems: 'center', paddingVertical: 16 }}>
       <Text style={commonStyles.footer}>Powered by PokeAPI</Text>
     </View>
   )

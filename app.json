@@ -14,7 +14,9 @@
     "updates": {
       "checkAutomatically": "ON_LOAD"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "buildNumber": "1.0.2",
       "supportsTablet": true,
@@ -36,6 +38,9 @@
       "eas": {
         "projectId": "0260b078-b156-497c-b346-8712aa1ec946"
       }
-    }
+    },
+    "plugins": [
+      "expo-image"
+    ]
   }
 }

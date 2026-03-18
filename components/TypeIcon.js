@@ -1,5 +1,5 @@
 import { StyleSheet, View } from 'react-native'
-import { TouchableOpacity } from 'react-native'
+import { Pressable } from 'react-native'
 
 import Bug from '../assets/images/type_icons/bug.svg'
 import Dark from '../assets/images/type_icons/dark.svg'
@@ -52,7 +52,7 @@ const Icon = ({ typeArray, calculateByType }) => {
         if (!entry) return null
         const { Component, width } = entry
         return (
-          <TouchableOpacity
+          <Pressable
             style={styles.icon}
             onPress={() => calculateByType(type)}
             key={type}
@@ -61,7 +61,7 @@ const Icon = ({ typeArray, calculateByType }) => {
               width={SCALE_MULTIPLIER * width}
               height={SCALE_MULTIPLIER * HEIGHT}
             />
-          </TouchableOpacity>
+          </Pressable>
         )
       })}
     </View>

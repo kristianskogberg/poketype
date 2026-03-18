@@ -19,7 +19,7 @@ import Rock from '../assets/images/type_images/rock.svg'
 import Steel from '../assets/images/type_images/steel.svg'
 import Water from '../assets/images/type_images/water.svg'
 
-const SIZE = 200
+const DEFAULT_SIZE = 200
 
 const TYPE_IMAGE_MAP = {
   bug: Bug,
@@ -42,14 +42,14 @@ const TYPE_IMAGE_MAP = {
   water: Water,
 }
 
-const TypeImage = ({ type }) => {
+const TypeImage = ({ type, size = DEFAULT_SIZE }) => {
   const Component = TYPE_IMAGE_MAP[type]
   if (!Component) return null
 
   return (
     <View>
       <View style={styles.icon} accessibilityLabel={type + ' type'}>
-        <Component width={SIZE} height={SIZE} />
+        <Component width={size} height={size} />
       </View>
     </View>
   )

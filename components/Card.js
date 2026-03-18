@@ -1,10 +1,4 @@
-import {
-  View,
-  TouchableOpacity,
-  Text,
-  StyleSheet,
-  Dimensions,
-} from 'react-native'
+import { View, Pressable, Text, StyleSheet, Dimensions } from 'react-native'
 import PokemonImage from './PokemonImage'
 import commonStyles from '../assets/styles/commonStyles'
 import Icon from './TypeIcon'
@@ -25,30 +19,33 @@ const Card = ({
   genSegments,
   activeSegment,
   onSelectGenSegment,
+  height = 200,
 }) => {
   const typeColor = types[0]
-  const subtitle = pokedexNumber.toLowerCase() === 'type' ? 'Type' : pokedexNumber
+  const subtitle =
+    pokedexNumber.toLowerCase() === 'type' ? 'Type' : pokedexNumber
 
-  const SCALE = 2
+  const SCALE = (height / 200) * 2
 
   return (
     <LinearGradient
       style={{
         justifyContent: 'center',
         width: width,
-        height: 200,
+        height,
         margin: 0,
         zIndex: 10,
+        overflow: 'hidden',
       }}
       colors={[bgColor[typeColor], '#fff']}>
       <View
         style={{
           position: 'absolute',
-          left: 86,
-          top: 22,
+          right: 6 + (height - 16) / 2 - height * 0.6,
+          top: height * 0.1,
           opacity: 0.25,
         }}>
-        <PokeBall fill={'white'} width={SCALE * 207} height={SCALE * 104} />
+        <PokeBall fill={'white'} width={height * 1.2} height={height * 1.2} />
       </View>
       <View style={styles.content}>
         <View style={styles.textAndTypes}>
@@ -61,6 +58,7 @@ const Card = ({
               fontSize: 16,
               color: typeTextColor[typeColor],
               opacity: 0.7,
+              fontWeight: '600',
             }}>
             {subtitle}
           </Text>
@@ -86,16 +84,14 @@ const Card = ({
           {genSegments ? (
             <View style={styles.genPills}>
               {genSegments.map((seg, i) => (
-                <TouchableOpacity
+                <Pressable
                   key={seg.label}
                   onPress={() => onSelectGenSegment(i)}
                   style={[
                     styles.genPill,
                     {
                       backgroundColor:
-                        i === activeSegment
-                          ? bgColor[seg.types[0]]
-                          : '#E0E0E0',
+                        i === activeSegment ? bgColor[seg.types[0]] : '#E0E0E0',
                     },
                   ]}>
                   <Text
@@ -110,25 +106,25 @@ const Card = ({
                     ]}>
                     {seg.label}
                   </Text>
-                </TouchableOpacity>
+                </Pressable>
               ))}
             </View>
           ) : null}
         </View>
 
         {image ? (
-          <TouchableOpacity
-            style={styles.pokemonImage}
+          <Pressable
+            style={[styles.pokemonImage, { height, justifyContent: 'center' }]}
             onPress={onImagePress}
             accessibilityLabel="pokemon image">
-            <PokemonImage imageUrl={image} />
-          </TouchableOpacity>
+            <PokemonImage imageUrl={image} size={height - 16} />
+          </Pressable>
         ) : (
-          <TouchableOpacity
-            style={styles.typeImage}
+          <Pressable
+            style={[styles.typeImage, { height, justifyContent: 'center' }]}
             accessibilityLabel="type image">
-            <TypeImage type={types[0]} />
-          </TouchableOpacity>
+            <TypeImage type={types[0]} size={height} />
+          </Pressable>
         )}
       </View>
     </LinearGradient>

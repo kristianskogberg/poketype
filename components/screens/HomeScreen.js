@@ -1,283 +1,171 @@
-import { useState, useRef, useCallback } from 'react'
-
+import { useState, useCallback, useMemo, useRef, memo, useEffect } from 'react'
 import {
   StyleSheet,
   Text,
+  TextInput,
   View,
-  Dimensions,
-  ScrollView,
-  Platform,
+  FlatList,
+  Pressable,
 } from 'react-native'
-
-import commonStyles from '../../assets/styles/commonStyles'
-import TypeCalc from '../TypeCalculator'
-import { AutocompleteDropdown } from 'react-native-autocomplete-dropdown'
-import { bgColor, textColor } from '../../assets/utils/colors'
+import { BlurView, BlurTargetView } from 'expo-blur'
+import { Ionicons } from '@expo/vector-icons'
 import Card from '../Card'
 import { allTypes } from '../../assets/utils/types'
-import allPokemon from '../../assets/utils/pokemon.json'
-import PokeBall from '../../assets/images/pokeball_grey.svg'
+import { allCardItems } from '../../assets/utils/pokemonData'
 import { CapitalizeFirstLetter } from '../../assets/utils/capitalizeFirstLetter'
-import { formatPokedexNumber } from '../../assets/utils/formatPokedexNumber'
+import { textColor } from '../../assets/utils/colors'
+import { addRecentSearch } from '../../assets/utils/useRecentSearches'
 import Footer from '../Footer'
 
-const GEN_LABELS = {
-  'generation-i': 'I',
-  'generation-ii': 'II',
-  'generation-iii': 'III',
-  'generation-iv': 'IV',
-  'generation-v': 'V',
-  'generation-vi': 'VI',
-  'generation-vii': 'VII',
-  'generation-viii': 'VIII',
-  'generation-ix': 'IX',
-}
+const ITEM_HEIGHT = 150
+const SEARCH_BAR_HEIGHT = 56
+const noop = () => {}
 
-// Build generation segments from typeOverrides
-// e.g. [{generation: "generation-v", types: ["normal"]}] with current types ["fairy"]
-// => [{label: "Gen I-V", types: ["normal"]}, {label: "Gen VI+", types: ["fairy"]}]
-function buildGenSegments(typeOverrides, currentTypes) {
-  if (!typeOverrides || typeOverrides.length === 0) return null
+// Type card items (pre-computed)
+const typeCardItems = allTypes.map((t) => ({
+  id: t,
+  kind: 'type',
+  name: CapitalizeFirstLetter(t),
+  types: [t],
+  pokedexNumber: 'Type',
+  pokemonId: null,
+  image: null,
+  searchName: t,
+}))
 
-  const sorted = [...typeOverrides].sort(
-    (a, b) =>
-      Object.keys(GEN_LABELS).indexOf(a.generation) -
-      Object.keys(GEN_LABELS).indexOf(b.generation),
-  )
+const allItems = [...allCardItems, ...typeCardItems]
 
-  const segments = []
-  let prevLabel = 'I'
+const CardItem = memo(
+  ({ item, onPress }) => (
+    <Pressable onPress={() => onPress(item)}>
+      <Card
+        pokemonName={item.name}
+        image={item.image}
+        types={item.types}
+        pokedexNumber={item.pokedexNumber}
+        calculateByType={noop}
+        height={ITEM_HEIGHT}
+      />
+    </Pressable>
+  ),
+  (prev, next) => prev.item.id === next.item.id,
+)
 
-  for (const override of sorted) {
-    const endLabel = GEN_LABELS[override.generation]
-    const label =
-      prevLabel === endLabel
-        ? `Gen ${endLabel}`
-        : `Gen ${prevLabel}-${endLabel}`
-    segments.push({ label, types: override.types })
+export default function HomeScreen({ navigation }) {
+  const [search, setSearch] = useState('')
+  const blurTargetRef = useRef(null)
+  const listRef = useRef(null)
 
-    const genKeys = Object.keys(GEN_LABELS)
-    const nextIndex = genKeys.indexOf(override.generation) + 1
-    if (nextIndex < genKeys.length) {
-      prevLabel = GEN_LABELS[genKeys[nextIndex]]
-    }
-  }
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      setSearch((prev) => (prev ? '' : prev))
+    })
+    return unsubscribe
+  }, [navigation])
 
-  segments.push({ label: `Gen ${prevLabel}+`, types: currentTypes })
-
-  return segments
-}
-
-const IMAGE_BASE =
-  'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork'
-const SHINY_IMAGE_BASE =
-  'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny'
-
-// Build a lookup map by pokemon name for instant access
-const pokemonByName = {}
-allPokemon.results.forEach((p) => {
-  pokemonByName[p.name] = p
-})
-
-const pokemonSuggestions = [
-  ...allPokemon.results.map((p) => ({
-    id: p.name,
-    title: CapitalizeFirstLetter(p.name),
-  })),
-  ...allTypes.map((t) => ({
-    id: t,
-    title: CapitalizeFirstLetter(t) + ' (Type)',
-  })),
-]
-
-export default function HomeScreen() {
-  const [data, setData] = useState(null)
-  const [types, setTypes] = useState([])
-  const [pokedexNumber, setPokedexNumber] = useState('')
-  const [name, setName] = useState('')
-
-  const searchRef = useRef(null)
-  const [currentImage, setCurrentImage] = useState('')
-  const [isShiny, setIsShiny] = useState(false)
-  const [currentPokemonId, setCurrentPokemonId] = useState(null)
-  const [genSegments, setGenSegments] = useState(null)
-  const [activeSegment, setActiveSegment] = useState(null)
-
-  const calculateByType = useCallback((typeName) => {
-    setName(CapitalizeFirstLetter(typeName))
-    setCurrentImage(null)
-    setCurrentPokemonId(null)
-    setIsShiny(false)
-    setGenSegments(null)
-    setActiveSegment(null)
-    setPokedexNumber('Type')
-    setTypes([typeName])
-    setData(typeName)
-    searchRef.current.clear()
+  const onChangeSearch = useCallback((text) => {
+    setSearch(text)
+    listRef.current?.scrollToOffset({ offset: 0, animated: false })
   }, [])
 
-  const selectPokemon = useCallback(
-    (selectedItem) => {
-      if (!selectedItem) return
+  const filteredItems = useMemo(() => {
+    if (!search) return allItems
+    const q = search.toLowerCase()
+    return allItems.filter((item) => item.searchName.startsWith(q))
+  }, [search])
 
-      if (allTypes.includes(selectedItem.id)) {
-        calculateByType(selectedItem.id)
-        return
-      }
-
-      const pokemon = pokemonByName[selectedItem.id]
-      if (!pokemon) return
-
-      setCurrentPokemonId(pokemon.id)
-      setIsShiny(false)
-      setCurrentImage(`${IMAGE_BASE}/${pokemon.id}.png`)
-      setPokedexNumber('#' + formatPokedexNumber(pokemon.pokedexNumber))
-      setName(CapitalizeFirstLetter(pokemon.speciesName))
-      setTypes(pokemon.types)
-
-      const segments = buildGenSegments(pokemon.typeOverrides, pokemon.types)
-      setGenSegments(segments)
-      setActiveSegment(segments ? segments.length - 1 : null)
-
-      setData(pokemon)
-      searchRef.current.clear()
+  const onPressItem = useCallback(
+    (item) => {
+      const navId = item.kind === 'pokemon' ? item.searchName : item.id
+      navigation.navigate('Detail', { kind: item.kind, id: navId })
+      addRecentSearch({
+        kind: item.kind,
+        id: navId,
+        name: item.name,
+        types: item.types,
+        pokedexNumber: item.rawPokedexNumber ?? null,
+        pokemonId: item.pokemonId,
+      })
     },
-    [calculateByType],
+    [navigation],
   )
 
-  const onSelectGenSegment = useCallback(
-    (index) => {
-      if (!genSegments) return
-      setActiveSegment(index)
-      setTypes(genSegments[index].types)
-    },
-    [genSegments],
+  const renderItem = useCallback(
+    ({ item }) => <CardItem item={item} onPress={onPressItem} />,
+    [onPressItem],
   )
 
-  const toggleShiny = useCallback(() => {
-    if (!currentPokemonId) return
-    setIsShiny((prev) => {
-      const next = !prev
-      const base = next ? SHINY_IMAGE_BASE : IMAGE_BASE
-      setCurrentImage(`${base}/${currentPokemonId}.png`)
-      return next
-    })
-  }, [currentPokemonId])
+  const getItemLayout = useCallback(
+    (_, index) => ({
+      length: ITEM_HEIGHT,
+      offset: ITEM_HEIGHT * index,
+      index,
+    }),
+    [],
+  )
 
   return (
     <View style={styles.container}>
-      {!data ? (
-        <>
-          <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-            <Text style={commonStyles.heading}>PokeType</Text>
-            <Text style={commonStyles.subHeading}>
-              Search for a Pokémon by name or type to view its strengths and
-              weaknesses.
-            </Text>
-          </View>
-          <Footer />
-        </>
-      ) : null}
-
-      <View
-        style={{
-          zIndex: 10,
-          position: Platform.OS == 'ios' ? 'absolute' : 'relative',
-          backgroundColor: !data ? '#fff' : bgColor[types[0]],
-          width: Dimensions.get('window').width,
-          paddingHorizontal: 16,
-          paddingTop: 8,
-        }}>
-        <AutocompleteDropdown
-          dataSet={pokemonSuggestions}
-          inputContainerStyle={{
-            backgroundColor: '#F2F2F2',
-            borderRadius: 5,
-            paddingVertical: 0,
-          }}
-          flatListProps={{ scrollEnabled: true }}
-          listContainerStyle={{
-            height: pokemonSuggestions.length * 70,
-            marginTop: 0,
-          }}
-          suggestionsListContainerStyle={{
-            marginTop: 0,
-          }}
-          controller={(controller) => {
-            searchRef.current = controller
-          }}
-          direction={'down'}
-          clearOnFocus={false}
-          closeOnBlur={false}
-          showChevron={false}
-          closeOnSubmit={false}
-          onSelectItem={selectPokemon}
-          textInputProps={{
-            placeholder: 'Search for a Pokémon or Type...',
-            placeholderTextColor: textColor.grey,
-            style: {
-              borderRadius: 100,
-            },
-          }}
-          suggestionsListMaxHeight={Dimensions.get('window').height}
-          EmptyResultComponent={
-            <Text
-              style={{
-                color: textColor.black,
-                padding: 10,
-                textAlign: 'center',
-                fontSize: 16,
-              }}>
-              Nothing found
-            </Text>
+      <BlurTargetView ref={blurTargetRef} style={StyleSheet.absoluteFill}>
+        <FlatList
+          ref={listRef}
+          data={filteredItems}
+          keyExtractor={(item) => item.id}
+          renderItem={renderItem}
+          getItemLayout={getItemLayout}
+          contentContainerStyle={{ paddingTop: SEARCH_BAR_HEIGHT }}
+          initialNumToRender={8}
+          maxToRenderPerBatch={10}
+          updateCellsBatchingPeriod={30}
+          windowSize={5}
+          removeClippedSubviews
+          keyboardShouldPersistTaps="handled"
+          ListEmptyComponent={
+            <Text style={styles.emptyText}>Nothing found</Text>
           }
+          ListFooterComponent={<Footer />}
         />
-      </View>
+      </BlurTargetView>
 
-      {data ? (
-        <ScrollView style={{ zIndex: 1 }}>
-          <>
-            <Card
-              pokemonName={name}
-              image={currentImage}
-              types={types}
-              pokedexNumber={pokedexNumber}
-              calculateByType={calculateByType}
-              onImagePress={toggleShiny}
-              genSegments={genSegments}
-              activeSegment={activeSegment}
-              onSelectGenSegment={onSelectGenSegment}
-            />
-
-            <View
-              style={{
-                flex: 1,
-                alignItems: 'flex-start',
-                width: Dimensions.get('window').width,
-              }}>
-              <ScrollView>
-                <TypeCalc typeArray={types} calculateByType={calculateByType} />
-              </ScrollView>
+      <View style={styles.searchOverlay}>
+        <View style={styles.searchRow}>
+          <BlurView
+            blurTarget={blurTargetRef}
+            intensity={36}
+            tint="light"
+            blurMethod="dimezisBlurView"
+            style={styles.searchInputBlur}>
+            <View style={styles.searchInputRow}>
+              <Ionicons name="search" size={18} color={textColor.grey} />
+              <TextInput
+                style={styles.searchInput}
+                placeholder="Search for a Pokémon or Type..."
+                placeholderTextColor={textColor.grey}
+                value={search}
+                onChangeText={onChangeSearch}
+                autoCorrect={false}
+              />
+              {search ? (
+                <Pressable onPress={() => setSearch('')} hitSlop={8}>
+                  <Ionicons name="close" size={18} color={textColor.grey} />
+                </Pressable>
+              ) : null}
             </View>
-          </>
-        </ScrollView>
-      ) : null}
-
-      {!data ? (
-        <View
-          style={{
-            position: 'absolute',
-            height: Dimensions.get('window').height,
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          <PokeBall fill={'black'} width={200} height={200} />
+          </BlurView>
+          <BlurView
+            blurTarget={blurTargetRef}
+            intensity={36}
+            tint="light"
+            blurMethod="dimezisBlurView"
+            style={styles.recentsButtonBlur}>
+            <Pressable
+              onPress={() => navigation.navigate('Recents')}
+              style={styles.recentsButton}>
+              <Ionicons name="time-outline" size={22} color={textColor.grey} />
+            </Pressable>
+          </BlurView>
         </View>
-      ) : null}
+      </View>
     </View>
   )
 }
@@ -285,7 +173,59 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
     backgroundColor: 'white',
+  },
+  searchOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    paddingHorizontal: 12,
+    paddingTop: 8,
+    paddingBottom: 8,
+  },
+  searchInputBlur: {
+    flex: 1,
+    borderRadius: 10,
+    overflow: 'hidden',
+    elevation: 4,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 6,
+  },
+  searchRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  searchInputRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 12,
+  },
+  searchInput: {
+    flex: 1,
+    paddingVertical: 10,
+    fontSize: 16,
+    color: '#424242',
+  },
+  recentsButtonBlur: {
+    borderRadius: 10,
+    overflow: 'hidden',
+    elevation: 4,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 6,
+  },
+  recentsButton: {
+    padding: 10,
+  },
+  emptyText: {
+    textAlign: 'center',
+    padding: 20,
+    fontSize: 16,
+    color: textColor.grey,
   },
 })

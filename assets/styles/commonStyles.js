@@ -50,12 +50,7 @@ export default StyleSheet.create({
   },
   footer: {
     fontSize: 12,
-    padding: 5,
     color: textColor.grey,
-    justifyContent: 'center',
     textAlign: 'center',
-    marginBottom: 14,
-    position: 'absolute',
-    bottom: 10,
   },
 })
