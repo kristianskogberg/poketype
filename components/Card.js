@@ -4,7 +4,11 @@ import commonStyles from '../assets/styles/commonStyles'
 import Icon from './TypeIcon'
 const { width } = Dimensions.get('window')
 import { bgColor, typeTextColor, textColor } from '../assets/utils/colors'
-import { BORDER_RADIUS, BORDER_RADIUS_SM, GAP_XS } from '../assets/utils/constants'
+import {
+  BORDER_RADIUS,
+  BORDER_RADIUS_SM,
+  GAP_XS,
+} from '../assets/utils/constants'
 import { LinearGradient } from 'expo-linear-gradient'
 import TypeImage from './TypeImage'
 
@@ -140,6 +144,7 @@ const Card = ({
 
   return (
     <LinearGradient
+      pointerEvents={isCompact ? 'none' : 'auto'}
       style={containerStyle}
       colors={[
         bgColor[typeColor],

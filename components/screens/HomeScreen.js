@@ -116,7 +116,10 @@ export default function HomeScreen({ navigation }) {
           keyExtractor={(item) => item.id}
           renderItem={renderItem}
           getItemLayout={getItemLayout}
-          contentContainerStyle={{ paddingTop: SEARCH_BAR_HEIGHT, gap: ITEM_GAP }}
+          contentContainerStyle={{
+            paddingTop: SEARCH_BAR_HEIGHT,
+            gap: ITEM_GAP,
+          }}
           initialNumToRender={8}
           maxToRenderPerBatch={10}
           updateCellsBatchingPeriod={30}
