@@ -14,11 +14,12 @@ import { allTypes } from '../../assets/utils/types'
 import { allCardItems } from '../../assets/utils/pokemonData'
 import { CapitalizeFirstLetter } from '../../assets/utils/capitalizeFirstLetter'
 import { textColor } from '../../assets/utils/colors'
+import { BORDER_RADIUS, GAP, GAP_SM } from '../../assets/utils/constants'
 import { addRecentSearch } from '../../assets/utils/useRecentSearches'
 import Footer from '../Footer'
 
 const ITEM_HEIGHT = 150
-const ITEM_GAP = 12
+const ITEM_GAP = GAP
 const SEARCH_BAR_HEIGHT = 56
 const noop = () => {}
 
@@ -188,7 +189,7 @@ const styles = StyleSheet.create({
   },
   searchInputBlur: {
     flex: 1,
-    borderRadius: 10,
+    borderRadius: BORDER_RADIUS,
     overflow: 'hidden',
     elevation: 4,
     shadowColor: '#000',
@@ -199,7 +200,7 @@ const styles = StyleSheet.create({
   searchRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    gap: GAP_SM,
   },
   searchInputRow: {
     flexDirection: 'row',
@@ -213,7 +214,7 @@ const styles = StyleSheet.create({
     color: '#424242',
   },
   recentsButtonBlur: {
-    borderRadius: 10,
+    borderRadius: BORDER_RADIUS,
     overflow: 'hidden',
     elevation: 4,
     shadowColor: '#000',

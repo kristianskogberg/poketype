@@ -4,6 +4,7 @@ import commonStyles from '../assets/styles/commonStyles'
 import Icon from './TypeIcon'
 const { width } = Dimensions.get('window')
 import { bgColor, typeTextColor, textColor } from '../assets/utils/colors'
+import { BORDER_RADIUS, BORDER_RADIUS_SM, GAP_XS } from '../assets/utils/constants'
 import { LinearGradient } from 'expo-linear-gradient'
 import TypeImage from './TypeImage'
 
@@ -38,7 +39,7 @@ const Card = ({
     zIndex: 10,
     overflow: 'hidden',
     ...(isCompact && {
-      borderRadius: 16,
+      borderRadius: BORDER_RADIUS,
       alignSelf: 'center',
     }),
   }
@@ -169,12 +170,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginTop: 6,
     paddingLeft: 8,
-    gap: 6,
+    gap: GAP_XS,
   },
   genPill: {
     paddingHorizontal: 10,
     paddingVertical: 4,
-    borderRadius: 12,
+    borderRadius: BORDER_RADIUS_SM,
   },
   genPillText: {
     fontSize: 12,

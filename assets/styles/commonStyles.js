@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native'
 import { textColor } from '../utils/colors'
+import { BORDER_RADIUS } from '../utils/constants'
 
 export default StyleSheet.create({
   heading: {
@@ -35,7 +36,7 @@ export default StyleSheet.create({
   },
   searchContainer: {
     height: 50,
-    borderRadius: 10,
+    borderRadius: BORDER_RADIUS,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
