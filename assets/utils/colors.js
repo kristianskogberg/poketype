@@ -40,10 +40,31 @@ const bgColor = {
   water: '#58ABF6',
 }
 
+const typeTextColor = {
+  bug: '#4A6118',
+  dark: '#2E2D33',
+  dragon: '#083763',
+  electric: '#8A7A10',
+  fairy: '#9B3A7E',
+  fighting: '#7A1E35',
+  fire: '#A14E0E',
+  flying: '#3D4F73',
+  ghost: '#2D3760',
+  grass: '#33632D',
+  ground: '#7A3F1F',
+  ice: '#2E7A72',
+  normal: '#52545C',
+  poison: '#5C2D73',
+  psychic: '#8C2C2E',
+  rock: '#6B5F3E',
+  steel: '#1E3E50',
+  water: '#254A73',
+}
+
 const textColor = {
   white: '#FFFFFF',
   black: '#17171B',
   grey: '#646464',
 }
 
-export { color, bgColor, textColor }
+export { color, bgColor, typeTextColor, textColor }

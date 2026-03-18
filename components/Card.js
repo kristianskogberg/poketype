@@ -9,13 +9,23 @@ import PokemonImage from './PokemonImage'
 import commonStyles from '../assets/styles/commonStyles'
 import Icon from './TypeIcon'
 const { width } = Dimensions.get('window')
-import { bgColor, textColor } from '../assets/utils/colors'
+import { bgColor, typeTextColor, textColor } from '../assets/utils/colors'
 import { LinearGradient } from 'expo-linear-gradient'
 import TypeImage from './TypeImage'
 
 import PokeBall from '../assets/images/pokeball.svg'
 
-const Card = ({ pokemonName, image, types, pokedexNumber, calculateByType }) => {
+const Card = ({
+  pokemonName,
+  image,
+  types,
+  pokedexNumber,
+  calculateByType,
+  onImagePress,
+  genSegments,
+  activeSegment,
+  onSelectGenSegment,
+}) => {
   const typeColor = types[0]
   const subtitle = pokedexNumber.toLowerCase() === 'type' ? 'Type' : pokedexNumber
 
@@ -49,7 +59,8 @@ const Card = ({ pokemonName, image, types, pokedexNumber, calculateByType }) => 
               paddingLeft: 8,
               paddingBottom: 0,
               fontSize: 16,
-              color: textColor.grey,
+              color: typeTextColor[typeColor],
+              opacity: 0.7,
             }}>
             {subtitle}
           </Text>
@@ -60,6 +71,7 @@ const Card = ({ pokemonName, image, types, pokedexNumber, calculateByType }) => 
                 marginBottom: 0,
                 textAlign: 'left',
                 paddingTop: 0,
+                color: typeTextColor[typeColor],
               },
             ]}>
             {pokemonName}
@@ -70,11 +82,44 @@ const Card = ({ pokemonName, image, types, pokedexNumber, calculateByType }) => 
             typeArray={types}
             calculateByType={calculateByType}
           />
+
+          {genSegments ? (
+            <View style={styles.genPills}>
+              {genSegments.map((seg, i) => (
+                <TouchableOpacity
+                  key={seg.label}
+                  onPress={() => onSelectGenSegment(i)}
+                  style={[
+                    styles.genPill,
+                    {
+                      backgroundColor:
+                        i === activeSegment
+                          ? bgColor[seg.types[0]]
+                          : '#E0E0E0',
+                    },
+                  ]}>
+                  <Text
+                    style={[
+                      styles.genPillText,
+                      {
+                        color:
+                          i === activeSegment
+                            ? textColor.white
+                            : textColor.grey,
+                      },
+                    ]}>
+                    {seg.label}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          ) : null}
         </View>
 
         {image ? (
           <TouchableOpacity
             style={styles.pokemonImage}
+            onPress={onImagePress}
             accessibilityLabel="pokemon image">
             <PokemonImage imageUrl={image} />
           </TouchableOpacity>
@@ -105,5 +150,20 @@ const styles = StyleSheet.create({
   content: {
     alignItems: 'center',
     flexDirection: 'row',
+  },
+  genPills: {
+    flexDirection: 'row',
+    marginTop: 6,
+    paddingLeft: 8,
+    gap: 6,
+  },
+  genPill: {
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 12,
+  },
+  genPillText: {
+    fontSize: 12,
+    fontWeight: '600',
   },
 })

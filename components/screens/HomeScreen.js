@@ -1,16 +1,13 @@
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useRef, useCallback } from 'react'
 
 import {
   StyleSheet,
   Text,
   View,
-  ActivityIndicator,
   Dimensions,
   ScrollView,
   Platform,
 } from 'react-native'
-
-import axios from 'axios'
 
 import commonStyles from '../../assets/styles/commonStyles'
 import TypeCalc from '../TypeCalculator'
@@ -24,9 +21,67 @@ import { CapitalizeFirstLetter } from '../../assets/utils/capitalizeFirstLetter'
 import { formatPokedexNumber } from '../../assets/utils/formatPokedexNumber'
 import Footer from '../Footer'
 
+const GEN_LABELS = {
+  'generation-i': 'I',
+  'generation-ii': 'II',
+  'generation-iii': 'III',
+  'generation-iv': 'IV',
+  'generation-v': 'V',
+  'generation-vi': 'VI',
+  'generation-vii': 'VII',
+  'generation-viii': 'VIII',
+  'generation-ix': 'IX',
+}
+
+// Build generation segments from typeOverrides
+// e.g. [{generation: "generation-v", types: ["normal"]}] with current types ["fairy"]
+// => [{label: "Gen I-V", types: ["normal"]}, {label: "Gen VI+", types: ["fairy"]}]
+function buildGenSegments(typeOverrides, currentTypes) {
+  if (!typeOverrides || typeOverrides.length === 0) return null
+
+  const sorted = [...typeOverrides].sort(
+    (a, b) =>
+      Object.keys(GEN_LABELS).indexOf(a.generation) -
+      Object.keys(GEN_LABELS).indexOf(b.generation),
+  )
+
+  const segments = []
+  let prevLabel = 'I'
+
+  for (const override of sorted) {
+    const endLabel = GEN_LABELS[override.generation]
+    const label =
+      prevLabel === endLabel
+        ? `Gen ${endLabel}`
+        : `Gen ${prevLabel}-${endLabel}`
+    segments.push({ label, types: override.types })
+
+    const genKeys = Object.keys(GEN_LABELS)
+    const nextIndex = genKeys.indexOf(override.generation) + 1
+    if (nextIndex < genKeys.length) {
+      prevLabel = GEN_LABELS[genKeys[nextIndex]]
+    }
+  }
+
+  segments.push({ label: `Gen ${prevLabel}+`, types: currentTypes })
+
+  return segments
+}
+
+const IMAGE_BASE =
+  'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork'
+const SHINY_IMAGE_BASE =
+  'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny'
+
+// Build a lookup map by pokemon name for instant access
+const pokemonByName = {}
+allPokemon.results.forEach((p) => {
+  pokemonByName[p.name] = p
+})
+
 const pokemonSuggestions = [
   ...allPokemon.results.map((p) => ({
-    id: p.url,
+    id: p.name,
     title: CapitalizeFirstLetter(p.name),
   })),
   ...allTypes.map((t) => ({
@@ -36,81 +91,82 @@ const pokemonSuggestions = [
 ]
 
 export default function HomeScreen() {
-  const [selectedItem, setSelectedItem] = useState('')
-
-  const [loading, setLoading] = useState(false)
   const [data, setData] = useState(null)
   const [types, setTypes] = useState([])
   const [pokedexNumber, setPokedexNumber] = useState('')
   const [name, setName] = useState('')
 
-  const [error, setError] = useState(null)
   const searchRef = useRef(null)
   const [currentImage, setCurrentImage] = useState('')
+  const [isShiny, setIsShiny] = useState(false)
+  const [currentPokemonId, setCurrentPokemonId] = useState(null)
+  const [genSegments, setGenSegments] = useState(null)
+  const [activeSegment, setActiveSegment] = useState(null)
 
   const calculateByType = useCallback((typeName) => {
     setName(CapitalizeFirstLetter(typeName))
     setCurrentImage(null)
+    setCurrentPokemonId(null)
+    setIsShiny(false)
+    setGenSegments(null)
+    setActiveSegment(null)
     setPokedexNumber('Type')
     setTypes([typeName])
     setData(typeName)
     searchRef.current.clear()
-    setLoading(false)
   }, [])
 
-  useEffect(() => {
-    if (!selectedItem) return
+  const selectPokemon = useCallback(
+    (selectedItem) => {
+      if (!selectedItem) return
 
-    setError(null)
-
-    if (allTypes.includes(selectedItem['id'])) {
-      calculateByType(selectedItem['id'])
-      return
-    }
-
-    const fetchPokemonData = async () => {
-      const url = selectedItem['id']
-      setData(null)
-
-      if (!url) return
-
-      try {
-        setError(null)
-        setLoading(true)
-        const response = await axios.get(url)
-        const result = response.data
-
-        const speciesResponse = await axios.get(result.species.url)
-
-        setCurrentImage(
-          result['sprites']['other']['official-artwork']['front_default'],
-        )
-
-        const pokedexNum = formatPokedexNumber(
-          speciesResponse.data.pokedex_numbers[0].entry_number,
-        )
-
-        setPokedexNumber('#' + pokedexNum)
-        setName(CapitalizeFirstLetter(result['species']['name']))
-
-        const newTypes = result.types.map((t) => t.type.name)
-        setTypes(newTypes)
-
-        setLoading(false)
-        setData(result)
-        searchRef.current.clear()
-      } catch (err) {
-        setError(err)
-        setLoading(false)
+      if (allTypes.includes(selectedItem.id)) {
+        calculateByType(selectedItem.id)
+        return
       }
-    }
 
-    fetchPokemonData()
-  }, [selectedItem, calculateByType])
+      const pokemon = pokemonByName[selectedItem.id]
+      if (!pokemon) return
+
+      setCurrentPokemonId(pokemon.id)
+      setIsShiny(false)
+      setCurrentImage(`${IMAGE_BASE}/${pokemon.id}.png`)
+      setPokedexNumber('#' + formatPokedexNumber(pokemon.pokedexNumber))
+      setName(CapitalizeFirstLetter(pokemon.speciesName))
+      setTypes(pokemon.types)
+
+      const segments = buildGenSegments(pokemon.typeOverrides, pokemon.types)
+      setGenSegments(segments)
+      setActiveSegment(segments ? segments.length - 1 : null)
+
+      setData(pokemon)
+      searchRef.current.clear()
+    },
+    [calculateByType],
+  )
+
+  const onSelectGenSegment = useCallback(
+    (index) => {
+      if (!genSegments) return
+      setActiveSegment(index)
+      setTypes(genSegments[index].types)
+    },
+    [genSegments],
+  )
+
+  const toggleShiny = useCallback(() => {
+    if (!currentPokemonId) return
+    setIsShiny((prev) => {
+      const next = !prev
+      const base = next ? SHINY_IMAGE_BASE : IMAGE_BASE
+      setCurrentImage(`${base}/${currentPokemonId}.png`)
+      return next
+    })
+  }, [currentPokemonId])
 
   return (
     <View style={styles.container}>
-      {!data && !loading ? (
+      {!data ? (
         <>
           <View style={{ justifyContent: 'center', alignItems: 'center' }}>
             <Text style={commonStyles.heading}>PokeType</Text>
@@ -155,7 +211,7 @@ export default function HomeScreen() {
           closeOnBlur={false}
           showChevron={false}
           closeOnSubmit={false}
-          onSelectItem={setSelectedItem}
+          onSelectItem={selectPokemon}
           textInputProps={{
             placeholder: 'Search for a Pokémon or Type...',
             placeholderTextColor: textColor.grey,
@@ -178,14 +234,6 @@ export default function HomeScreen() {
         />
       </View>
 
-      {loading ? (
-        <ActivityIndicator style={{ margin: 50 }}></ActivityIndicator>
-      ) : null}
-
-      {error && !data && !loading ? (
-        <Text style={{ margin: 10 }}>Error: {error?.message}</Text>
-      ) : null}
-
       {data ? (
         <ScrollView style={{ zIndex: 1 }}>
           <>
@@ -195,6 +243,10 @@ export default function HomeScreen() {
               types={types}
               pokedexNumber={pokedexNumber}
               calculateByType={calculateByType}
+              onImagePress={toggleShiny}
+              genSegments={genSegments}
+              activeSegment={activeSegment}
+              onSelectGenSegment={onSelectGenSegment}
             />
 
             <View
