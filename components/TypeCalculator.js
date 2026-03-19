@@ -200,8 +200,8 @@ const TypeCalc = ({
           text={
             <Text style={styles.tipText}>
               {tooltipTypeName} attacks deal super-effective{' '}
-              <Text style={styles.tipPercentage}>(200%)</Text> damage to these
-              types
+              <Text style={styles.tipPercentageSuperEffective}>(200%)</Text>{' '}
+              damage to these types
             </Text>
           }>
           <Text style={styles.heading}>Strong against</Text>
@@ -266,8 +266,8 @@ const TypeCalc = ({
           text={
             <Text style={styles.tipText}>
               {tooltipTypeName} types take super-effective{' '}
-              <Text style={styles.tipPercentage}>(200%)</Text> damage from these
-              types attacks
+              <Text style={styles.tipPercentageSuperEffective}>(200%)</Text>{' '}
+              damage from these types attacks
             </Text>
           }>
           <Text style={styles.heading}>Vulnerable to</Text>

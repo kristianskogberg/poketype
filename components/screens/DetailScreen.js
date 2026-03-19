@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react'
 import { StyleSheet, View, ScrollView, Dimensions } from 'react-native'
+import useReviewPrompt from '../../hooks/useReviewPrompt'
 import Card from '../Card'
 import TypeCalc from '../TypeCalculator'
 import { CapitalizeFirstLetter } from '../../assets/utils/capitalizeFirstLetter'
@@ -15,6 +16,8 @@ export default function DetailScreen({ route, navigation }) {
   const { kind, id } = route.params
   const isType = kind === 'type'
   const pokemon = isType ? null : pokemonByName[id]
+
+  useReviewPrompt(!isType)
 
   const initialTypes = isType ? [id] : pokemon.types
   const initialSegments = isType
