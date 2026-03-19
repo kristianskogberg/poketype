@@ -5,8 +5,17 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { Ionicons } from '@expo/vector-icons'
+import {
+  registerWidgetTaskHandler,
+  registerWidgetConfigurationScreen,
+} from 'react-native-android-widget'
 import HomeScreen from './components/screens/HomeScreen'
 import DetailScreen from './components/screens/DetailScreen'
+import widgetTaskHandler from './widgets/widgetTaskHandler'
+import TypeSelectionScreen from './widgets/TypeSelectionScreen'
+
+registerWidgetTaskHandler(widgetTaskHandler)
+registerWidgetConfigurationScreen(TypeSelectionScreen)
 
 const Stack = createNativeStackNavigator()
 

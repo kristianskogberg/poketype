@@ -40,7 +40,22 @@
       }
     },
     "plugins": [
-      "expo-image"
+      "expo-image",
+      ["react-native-android-widget", {
+        "widgets": [{
+          "name": "TypeEffectiveness",
+          "label": "Type Matchup",
+          "description": "See type effectiveness for a dual-type defender",
+          "minWidth": "250dp",
+          "minHeight": "180dp",
+          "targetCellWidth": 4,
+          "targetCellHeight": 2,
+          "previewImage": "./assets/widget-preview.png",
+          "resizeMode": "horizontal|vertical",
+          "widgetFeatures": "reconfigurable|configuration_optional",
+          "initialLayout": "TypeEffectivenessWidget"
+        }]
+      }]
     ]
   }
 }

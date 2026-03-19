@@ -10,6 +10,7 @@ import {
   pokemonByName,
   buildGenSegments,
 } from '../../assets/utils/pokemonData'
+import useReviewPrompt from '../../hooks/useReviewPrompt'
 
 export default function DetailScreen({ route, navigation }) {
   const { kind, id } = route.params
@@ -31,6 +32,8 @@ export default function DetailScreen({ route, navigation }) {
   const [currentImage, setCurrentImage] = useState(
     isType ? null : `${IMAGE_BASE}/${pokemon.id}.png`,
   )
+
+  useReviewPrompt(!isType)
 
   const name = isType ? CapitalizeFirstLetter(id) : pokemon.displayName
   const pokedexNumber = isType
