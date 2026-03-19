@@ -10,7 +10,6 @@ import {
   pokemonByName,
   buildGenSegments,
 } from '../../assets/utils/pokemonData'
-import { addRecentSearch } from '../../assets/utils/useRecentSearches'
 
 export default function DetailScreen({ route, navigation }) {
   const { kind, id } = route.params
@@ -33,9 +32,7 @@ export default function DetailScreen({ route, navigation }) {
     isType ? null : `${IMAGE_BASE}/${pokemon.id}.png`,
   )
 
-  const name = isType
-    ? CapitalizeFirstLetter(id)
-    : pokemon.displayName
+  const name = isType ? CapitalizeFirstLetter(id) : pokemon.displayName
   const pokedexNumber = isType
     ? 'Type'
     : '#' + formatPokedexNumber(pokemon.pokedexNumber)
@@ -44,14 +41,6 @@ export default function DetailScreen({ route, navigation }) {
   const calculateByType = useCallback(
     (typeName) => {
       navigation.push('Detail', { kind: 'type', id: typeName })
-      addRecentSearch({
-        kind: 'type',
-        id: typeName,
-        name: CapitalizeFirstLetter(typeName),
-        types: [typeName],
-        pokedexNumber: null,
-        pokemonId: null,
-      })
     },
     [navigation],
   )

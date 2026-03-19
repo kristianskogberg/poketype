@@ -15,7 +15,6 @@ import { allCardItems } from '../../assets/utils/pokemonData'
 import { CapitalizeFirstLetter } from '../../assets/utils/capitalizeFirstLetter'
 import { textColor } from '../../assets/utils/colors'
 import { BORDER_RADIUS, GAP, GAP_SM } from '../../assets/utils/constants'
-import { addRecentSearch } from '../../assets/utils/useRecentSearches'
 import Footer from '../Footer'
 
 const ITEM_HEIGHT = 150
@@ -60,7 +59,6 @@ export default function HomeScreen({ navigation }) {
   const blurTargetRef = useRef(null)
   const listRef = useRef(null)
 
-
   const onChangeSearch = useCallback((text) => {
     setSearch(text)
     listRef.current?.scrollToOffset({ offset: 0, animated: false })
@@ -69,21 +67,15 @@ export default function HomeScreen({ navigation }) {
   const filteredItems = useMemo(() => {
     if (!search) return allItems
     const q = search.toLowerCase().replace(/\s+/g, '')
-    return allItems.filter((item) => item.searchName.replace(/-/g, '').includes(q))
+    return allItems.filter((item) =>
+      item.searchName.replace(/-/g, '').includes(q),
+    )
   }, [search])
 
   const onPressItem = useCallback(
     (item) => {
       const navId = item.kind === 'pokemon' ? item.searchName : item.id
       navigation.navigate('Detail', { kind: item.kind, id: navId })
-      addRecentSearch({
-        kind: item.kind,
-        id: navId,
-        name: item.name,
-        types: item.types,
-        pokedexNumber: item.rawPokedexNumber ?? null,
-        pokemonId: item.pokemonId,
-      })
     },
     [navigation],
   )
@@ -132,8 +124,8 @@ export default function HomeScreen({ navigation }) {
         <View style={styles.searchRow}>
           <BlurView
             blurTarget={blurTargetRef}
-            intensity={36}
-            tint="light"
+            intensity={48}
+            tint="prominent"
             blurMethod="dimezisBlurView"
             style={styles.searchInputBlur}>
             <View style={styles.searchInputRow}>
@@ -152,18 +144,6 @@ export default function HomeScreen({ navigation }) {
                 </Pressable>
               ) : null}
             </View>
-          </BlurView>
-          <BlurView
-            blurTarget={blurTargetRef}
-            intensity={36}
-            tint="light"
-            blurMethod="dimezisBlurView"
-            style={styles.recentsButtonBlur}>
-            <Pressable
-              onPress={() => navigation.navigate('Recents')}
-              style={styles.recentsButton}>
-              <Ionicons name="time-outline" size={22} color={textColor.grey} />
-            </Pressable>
           </BlurView>
         </View>
       </View>
@@ -189,11 +169,11 @@ const styles = StyleSheet.create({
     flex: 1,
     borderRadius: BORDER_RADIUS,
     overflow: 'hidden',
-    elevation: 4,
+    elevation: 12,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.15,
-    shadowRadius: 6,
+    shadowOpacity: 0.9,
+    shadowRadius: 12,
   },
   searchRow: {
     flexDirection: 'row',
@@ -209,19 +189,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 10,
     fontSize: 16,
-    color: '#424242',
-  },
-  recentsButtonBlur: {
-    borderRadius: BORDER_RADIUS,
-    overflow: 'hidden',
-    elevation: 4,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.15,
-    shadowRadius: 6,
-  },
-  recentsButton: {
-    padding: 10,
+    color: textColor.black,
   },
   emptyText: {
     textAlign: 'center',

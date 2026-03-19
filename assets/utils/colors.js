@@ -64,8 +64,9 @@ const typeTextColor = {
 const textColor = {
   white: '#FFFFFF',
   black: '#17171B',
-  grey: '#909090',
+  grey: '#727272',
   lightGrey: '#b4b4b4',
+  red: '#ff5353',
 }
 
 export { color, bgColor, typeTextColor, textColor }

@@ -1,5 +1,6 @@
-import { StyleSheet, View } from 'react-native'
+import { StyleSheet, Text, View } from 'react-native'
 import { Pressable } from 'react-native'
+import { textColor } from '../assets/utils/colors'
 
 import Bug from '../assets/images/type_icons/bug.svg'
 import Dark from '../assets/images/type_icons/dark.svg'
@@ -45,9 +46,17 @@ const TYPE_ICON_MAP = {
 }
 
 const Icon = ({ typeArray, calculateByType }) => {
+  if (!typeArray || typeArray.length === 0) {
+    return (
+      <View style={styles.icon}>
+        <Text style={styles.noneText}>None</Text>
+      </View>
+    )
+  }
+
   return (
     <View style={styles.icon}>
-      {typeArray?.map((type) => {
+      {typeArray.map((type) => {
         const entry = TYPE_ICON_MAP[type]
         if (!entry) return null
         const { Component, width } = entry
@@ -76,5 +85,12 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     flexDirection: 'row',
     flexWrap: 'wrap',
+  },
+  noneText: {
+    height: SCALE_MULTIPLIER * HEIGHT + 6,
+    lineHeight: SCALE_MULTIPLIER * HEIGHT + 6,
+    fontSize: 14,
+    color: textColor.grey,
+    paddingHorizontal: 3,
   },
 })

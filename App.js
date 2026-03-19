@@ -7,7 +7,6 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { Ionicons } from '@expo/vector-icons'
 import HomeScreen from './components/screens/HomeScreen'
 import DetailScreen from './components/screens/DetailScreen'
-import RecentsScreen from './components/screens/RecentsScreen'
 
 const Stack = createNativeStackNavigator()
 
@@ -34,28 +33,8 @@ export default function App() {
                 headerTransparent: true,
                 animation: 'fade',
                 headerLeft: () => (
-                  <Pressable
-                    onPress={() => navigation.popToTop()}
-                    hitSlop={8}>
+                  <Pressable onPress={() => navigation.popToTop()} hitSlop={8}>
                     <Ionicons name="search" size={22} color="#fff" />
-                  </Pressable>
-                ),
-              })}
-            />
-            <Stack.Screen
-              name="Recents"
-              component={RecentsScreen}
-              options={({ navigation }) => ({
-                headerShown: true,
-                headerTitle: 'Recent Searches',
-                headerBackVisible: false,
-                headerShadowVisible: false,
-                animation: 'fade',
-                headerLeft: () => (
-                  <Pressable
-                    onPress={() => navigation.popToTop()}
-                    hitSlop={8}>
-                    <Ionicons name="search" size={22} color="#333" />
                   </Pressable>
                 ),
               })}

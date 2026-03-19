@@ -198,18 +198,11 @@ const TypeCalc = ({
           style={styles.tooltipWrapper}
           highlightRef={strengthsRef}
           text={
-            isBoth ? (
-              <Text style={styles.tipText}>
-                These types take super-effective damage from {tooltipTypeName}{' '}
-                attacks
-              </Text>
-            ) : (
-              <Text style={styles.tipText}>
-                These types take super-effective{' '}
-                <Text style={styles.tipPct}>(200%)</Text> damage from{' '}
-                {tooltipTypeName} attacks
-              </Text>
-            )
+            <Text style={styles.tipText}>
+              {tooltipTypeName} attacks deal super-effective{' '}
+              <Text style={styles.tipPercentage}>(200%)</Text> damage to these
+              types
+            </Text>
           }>
           <Text style={styles.heading}>Strong against</Text>
         </Tooltip>
@@ -227,17 +220,11 @@ const TypeCalc = ({
           style={styles.tooltipWrapper}
           highlightRef={weaknessesRef}
           text={
-            isBoth ? (
-              <Text style={styles.tipText}>
-                These types resist {tooltipTypeName} attacks, taking reduced
-                damage
-              </Text>
-            ) : (
-              <Text style={styles.tipText}>
-                These types resist {tooltipTypeName} attacks, taking reduced{' '}
-                <Text style={styles.tipPct}>(50%)</Text> damage
-              </Text>
-            )
+            <Text style={styles.tipText}>
+              {tooltipTypeName} attacks deal reduced{' '}
+              <Text style={styles.tipPercentage}>(50%)</Text> damage to these
+              types
+            </Text>
           }>
           <Text style={styles.heading}>Weak against</Text>
         </Tooltip>
@@ -255,18 +242,11 @@ const TypeCalc = ({
           style={styles.tooltipWrapper}
           highlightRef={resistancesRef}
           text={
-            isBoth ? (
-              <Text style={styles.tipText}>
-                Attacks from these types deal reduced damage to{' '}
-                {tooltipTypeName} Pokemon
-              </Text>
-            ) : (
-              <Text style={styles.tipText}>
-                Attacks from these types deal reduced{' '}
-                <Text style={styles.tipPct}>(50%)</Text> damage to{' '}
-                {tooltipTypeName} types
-              </Text>
-            )
+            <Text style={styles.tipText}>
+              {tooltipTypeName} types take reduced{' '}
+              <Text style={styles.tipPercentage}>(50%)</Text> damage from these
+              types attacks
+            </Text>
           }>
           <Text style={styles.heading}>Resistant to</Text>
         </Tooltip>
@@ -284,18 +264,11 @@ const TypeCalc = ({
           style={styles.tooltipWrapper}
           highlightRef={vulnerabilitiesRef}
           text={
-            isBoth ? (
-              <Text style={styles.tipText}>
-                Attacks from these types deal super-effective damage to{' '}
-                {tooltipTypeName} Pokemon
-              </Text>
-            ) : (
-              <Text style={styles.tipText}>
-                Attacks from these types deal super-effective{' '}
-                <Text style={styles.tipPct}>(200%)</Text> damage to{' '}
-                {tooltipTypeName} types
-              </Text>
-            )
+            <Text style={styles.tipText}>
+              {tooltipTypeName} types take super-effective{' '}
+              <Text style={styles.tipPercentage}>(200%)</Text> damage from these
+              types attacks
+            </Text>
           }>
           <Text style={styles.heading}>Vulnerable to</Text>
         </Tooltip>
@@ -342,14 +315,16 @@ const styles = StyleSheet.create({
   tipType: {
     fontWeight: 'bold',
   },
-  tipPct: {
+  tipPercentage: {
     color: textColor.lightGrey,
+  },
+  tipPercentageSuperEffective: {
+    color: textColor.red,
   },
   tabRow: {
     flexDirection: 'row',
     paddingHorizontal: 14,
-    paddingTop: 10,
-    paddingBottom: 4,
+    paddingBottom: 12,
     gap: GAP_SM,
   },
   tab: {
