@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo, useRef } from 'react'
 import { StyleSheet, Text, View, Dimensions } from 'react-native'
 import { color, textColor } from '../assets/utils/colors'
 
@@ -44,93 +44,111 @@ const TypeCalc = ({ typeArray, calculateByType }) => {
     }, [typeArray])
 
   const typeName = typeArray?.[0]
+  const strengthsRef = useRef(null)
+  const weaknessesRef = useRef(null)
+  const resistancesRef = useRef(null)
+  const vulnerabilitiesRef = useRef(null)
 
   return (
     <View
       style={{
         width: Dimensions.get('window').width,
       }}>
-      <Tooltip
-        style={styles.tooltipWrapper}
-        text={
-          <Text style={styles.tipText}>
-            These types take super-effective{' '}
-            <Text style={styles.tipPct}>(200%)</Text> damage from{' '}
-            <Text style={[styles.tipType, { color: color[typeName] }]}>
-              {capitalize(typeName)}
-            </Text>{' '}
-            attacks
-          </Text>
-        }>
-        <Text style={styles.heading}>Strong against</Text>
-      </Tooltip>
+      <View ref={strengthsRef}>
+        <Tooltip
+          style={styles.tooltipWrapper}
+          highlightRef={strengthsRef}
+          text={
+            <Text style={styles.tipText}>
+              These types take super-effective{' '}
+              <Text style={styles.tipPct}>(200%)</Text> damage from{' '}
+              <Text style={[styles.tipType, { color: color[typeName] }]}>
+                {capitalize(typeName)}
+              </Text>{' '}
+              attacks
+            </Text>
+          }>
+          <Text style={styles.heading}>Strong against</Text>
+        </Tooltip>
 
-      <View style={styles.icon}>
-        <Icon typeArray={strengths} calculateByType={calculateByType} />
+        <View style={styles.icon}>
+          <Icon typeArray={strengths} calculateByType={calculateByType} />
+        </View>
       </View>
       <View style={styles.lineContainer}>
         <View style={styles.lineSeparator} />
       </View>
 
-      <Tooltip
-        style={styles.tooltipWrapper}
-        text={
-          <Text style={styles.tipText}>
-            These types resist{' '}
-            <Text style={[styles.tipType, { color: color[typeName] }]}>
-              {capitalize(typeName)}
-            </Text>{' '}
-            attacks, taking reduced <Text style={styles.tipPct}>(50%)</Text>{' '}
-            damage
-          </Text>
-        }>
-        <Text style={styles.heading}>Weak against</Text>
-      </Tooltip>
+      <View ref={weaknessesRef}>
+        <Tooltip
+          style={styles.tooltipWrapper}
+          highlightRef={weaknessesRef}
+          text={
+            <Text style={styles.tipText}>
+              These types resist{' '}
+              <Text style={[styles.tipType, { color: color[typeName] }]}>
+                {capitalize(typeName)}
+              </Text>{' '}
+              attacks, taking reduced{' '}
+              <Text style={styles.tipPct}>(50%)</Text> damage
+            </Text>
+          }>
+          <Text style={styles.heading}>Weak against</Text>
+        </Tooltip>
 
-      <View style={styles.icon}>
-        <Icon typeArray={weaknesses} calculateByType={calculateByType} />
+        <View style={styles.icon}>
+          <Icon typeArray={weaknesses} calculateByType={calculateByType} />
+        </View>
       </View>
       <View style={styles.lineContainer}>
         <View style={styles.lineSeparator} />
       </View>
-      <Tooltip
-        style={styles.tooltipWrapper}
-        text={
-          <Text style={styles.tipText}>
-            Attacks from these types deal reduced{' '}
-            <Text style={styles.tipPct}>(50%)</Text> damage to{' '}
-            <Text style={[styles.tipType, { color: color[typeName] }]}>
-              {capitalize(typeName)}
-            </Text>{' '}
-            types
-          </Text>
-        }>
-        <Text style={styles.heading}>Resistant to</Text>
-      </Tooltip>
 
-      <View style={styles.icon}>
-        <Icon typeArray={resistances} calculateByType={calculateByType} />
+      <View ref={resistancesRef}>
+        <Tooltip
+          style={styles.tooltipWrapper}
+          highlightRef={resistancesRef}
+          text={
+            <Text style={styles.tipText}>
+              Attacks from these types deal reduced{' '}
+              <Text style={styles.tipPct}>(50%)</Text> damage to{' '}
+              <Text style={[styles.tipType, { color: color[typeName] }]}>
+                {capitalize(typeName)}
+              </Text>{' '}
+              types
+            </Text>
+          }>
+          <Text style={styles.heading}>Resistant to</Text>
+        </Tooltip>
+
+        <View style={styles.icon}>
+          <Icon typeArray={resistances} calculateByType={calculateByType} />
+        </View>
       </View>
       <View style={styles.lineContainer}>
         <View style={styles.lineSeparator} />
       </View>
-      <Tooltip
-        style={styles.tooltipWrapper}
-        text={
-          <Text style={styles.tipText}>
-            Attacks from these types deal super-effective{' '}
-            <Text style={styles.tipPct}>(200%)</Text> damage to{' '}
-            <Text style={[styles.tipType, { color: color[typeName] }]}>
-              {capitalize(typeName)}
-            </Text>{' '}
-            types
-          </Text>
-        }>
-        <Text style={styles.heading}>Vulnerable to</Text>
-      </Tooltip>
 
-      <View style={styles.icon}>
-        <Icon typeArray={vulnerabilities} calculateByType={calculateByType} />
+      <View ref={vulnerabilitiesRef}>
+        <Tooltip
+          style={styles.tooltipWrapper}
+          highlightRef={vulnerabilitiesRef}
+          text={
+            <Text style={styles.tipText}>
+              Attacks from these types deal super-effective{' '}
+              <Text style={styles.tipPct}>(200%)</Text> damage to{' '}
+              <Text style={[styles.tipType, { color: color[typeName] }]}>
+                {capitalize(typeName)}
+              </Text>{' '}
+              types
+            </Text>
+          }>
+          <Text style={styles.heading}>Vulnerable to</Text>
+        </Tooltip>
+
+        <View style={styles.icon}>
+          <Icon typeArray={vulnerabilities} calculateByType={calculateByType} />
+        </View>
       </View>
     </View>
   )
