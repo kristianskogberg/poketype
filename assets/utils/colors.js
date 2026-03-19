@@ -65,6 +65,7 @@ const textColor = {
   white: '#FFFFFF',
   black: '#17171B',
   grey: '#909090',
+  lightGrey: '#b4b4b4',
 }
 
 export { color, bgColor, typeTextColor, textColor }
