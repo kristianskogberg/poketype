@@ -1,5 +1,4 @@
 import allPokemon from './pokemon.json'
-import { CapitalizeFirstLetter } from './capitalizeFirstLetter'
 import { formatPokedexNumber } from './formatPokedexNumber'
 
 export const IMAGE_BASE =
@@ -30,13 +29,14 @@ export const allPokemonList = allPokemon.results
 export const allCardItems = allPokemon.results.map((p) => ({
   id: p.name,
   kind: 'pokemon',
-  name: CapitalizeFirstLetter(p.speciesName),
+  name: p.displayName,
   types: p.types,
   pokedexNumber: '#' + formatPokedexNumber(p.pokedexNumber),
   rawPokedexNumber: p.pokedexNumber,
   pokemonId: p.id,
   image: `${IMAGE_BASE}/${p.id}.png`,
   searchName: p.name,
+  forms: p.forms || null,
 }))
 
 export function buildGenSegments(typeOverrides, currentTypes) {

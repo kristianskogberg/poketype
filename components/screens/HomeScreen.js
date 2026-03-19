@@ -45,6 +45,7 @@ const CardItem = memo(
         image={item.image}
         types={item.types}
         pokedexNumber={item.pokedexNumber}
+        forms={item.forms}
         calculateByType={noop}
         height={ITEM_HEIGHT}
         variant="compact"
@@ -73,8 +74,8 @@ export default function HomeScreen({ navigation }) {
 
   const filteredItems = useMemo(() => {
     if (!search) return allItems
-    const q = search.toLowerCase()
-    return allItems.filter((item) => item.searchName.startsWith(q))
+    const q = search.toLowerCase().replace(/\s+/g, '')
+    return allItems.filter((item) => item.searchName.replace(/-/g, '').includes(q))
   }, [search])
 
   const onPressItem = useCallback(

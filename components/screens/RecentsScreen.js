@@ -8,7 +8,7 @@ import {
   Dimensions,
 } from 'react-native'
 import Card from '../Card'
-import { IMAGE_BASE } from '../../assets/utils/pokemonData'
+import { IMAGE_BASE, pokemonByName } from '../../assets/utils/pokemonData'
 import { formatPokedexNumber } from '../../assets/utils/formatPokedexNumber'
 import { useRecentSearches } from '../../assets/utils/useRecentSearches'
 import { textColor } from '../../assets/utils/colors'
@@ -36,6 +36,11 @@ export default function RecentsScreen({ navigation }) {
             item.pokedexNumber
               ? '#' + formatPokedexNumber(item.pokedexNumber)
               : 'Type'
+          }
+          forms={
+            item.kind === 'pokemon' && pokemonByName[item.id]
+              ? pokemonByName[item.id].forms || null
+              : null
           }
           calculateByType={noop}
           height={ITEM_HEIGHT}

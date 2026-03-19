@@ -1,4 +1,11 @@
-import { View, Pressable, Text, StyleSheet, Dimensions } from 'react-native'
+import {
+  View,
+  Pressable,
+  Text,
+  StyleSheet,
+  Image,
+  Dimensions,
+} from 'react-native'
 import PokemonImage from './PokemonImage'
 import commonStyles from '../assets/styles/commonStyles'
 import Icon from './TypeIcon'
@@ -11,14 +18,23 @@ import {
 } from '../assets/utils/constants'
 import { LinearGradient } from 'expo-linear-gradient'
 import TypeImage from './TypeImage'
+import { Ionicons } from '@expo/vector-icons'
 
 import PokeBall from '../assets/images/pokeball.svg'
+
+const FORM_ICONS = {
+  Mega: require('../assets/images/form_icons/mega.png'),
+  'G-Max': require('../assets/images/form_icons/gmax.png'),
+}
+
+const REGION_FORMS = ['Galarian', 'Alolan', 'Hisuian', 'Paldean']
 
 const Card = ({
   pokemonName,
   image,
   types,
   pokedexNumber,
+  forms,
   calculateByType,
   onImagePress,
   genSegments,
@@ -63,19 +79,69 @@ const Card = ({
       </View>
       <View style={styles.content}>
         <View style={styles.textAndTypes}>
-          <Text
+          <View
             style={{
-              marginBottom: 0,
-              textAlign: 'left',
+              flexDirection: 'row',
+              alignItems: 'center',
               paddingLeft: 8,
-              paddingBottom: 0,
-              fontSize: 16,
-              color: typeTextColor[typeColor],
-              opacity: 0.7,
-              fontWeight: '600',
+              gap: 6,
             }}>
-            {subtitle}
-          </Text>
+            <Text
+              style={{
+                marginBottom: 0,
+                textAlign: 'left',
+                paddingBottom: 0,
+                fontSize: 16,
+                color: typeTextColor[typeColor],
+                opacity: 0.7,
+                fontWeight: '600',
+              }}>
+              {subtitle}
+            </Text>
+            {forms
+              ? forms.map((form) => {
+                  const isMega = form.startsWith('Mega')
+                  const isGMax = form.startsWith('G-Max')
+                  const isRegion = REGION_FORMS.includes(form)
+                  const icon = isMega
+                    ? FORM_ICONS.Mega
+                    : isGMax
+                      ? FORM_ICONS['G-Max']
+                      : null
+                  return (
+                    <View
+                      key={form}
+                      style={[
+                        styles.formBadge,
+                        { borderColor: typeTextColor[typeColor] },
+                      ]}>
+                      {isRegion ? (
+                        <Ionicons
+                          name="location"
+                          size={10}
+                          color={typeTextColor[typeColor]}
+                        />
+                      ) : icon ? (
+                        <Image
+                          source={icon}
+                          style={[
+                            styles.formIcon,
+                            { tintColor: typeTextColor[typeColor] },
+                          ]}
+                        />
+                      ) : null}
+                      <Text
+                        style={[
+                          styles.formBadgeText,
+                          { color: typeTextColor[typeColor] },
+                        ]}>
+                        {form}
+                      </Text>
+                    </View>
+                  )
+                })
+              : null}
+          </View>
           <Text
             style={[
               commonStyles.heading,
@@ -99,7 +165,10 @@ const Card = ({
                   style={{
                     opacity: i === selectedTypeIndex ? 1 : 0.5,
                   }}>
-                  <Icon typeArray={[type]} calculateByType={() => onSelectType(i)} />
+                  <Icon
+                    typeArray={[type]}
+                    calculateByType={() => onSelectType(i)}
+                  />
                 </Pressable>
               ))}
             </View>
@@ -203,5 +272,23 @@ const styles = StyleSheet.create({
   genPillText: {
     fontSize: 12,
     fontWeight: '600',
+  },
+  formBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1.5,
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 999,
+    gap: 4,
+  },
+  formBadgeText: {
+    fontSize: 11,
+    fontWeight: '700',
+  },
+  formIcon: {
+    width: 12,
+    height: 12,
+    resizeMode: 'contain',
   },
 })

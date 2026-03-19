@@ -35,10 +35,11 @@ export default function DetailScreen({ route, navigation }) {
 
   const name = isType
     ? CapitalizeFirstLetter(id)
-    : CapitalizeFirstLetter(pokemon.speciesName)
+    : pokemon.displayName
   const pokedexNumber = isType
     ? 'Type'
     : '#' + formatPokedexNumber(pokemon.pokedexNumber)
+  const forms = isType ? null : pokemon.forms || null
 
   const calculateByType = useCallback(
     (typeName) => {
@@ -82,6 +83,7 @@ export default function DetailScreen({ route, navigation }) {
         image={currentImage}
         types={types}
         pokedexNumber={pokedexNumber}
+        forms={forms}
         calculateByType={calculateByType}
         onImagePress={toggleShiny}
         genSegments={genSegments}
