@@ -27,6 +27,7 @@ export default function DetailScreen({ route, navigation }) {
   const [activeSegment, setActiveSegment] = useState(
     initialSegments ? initialSegments.length - 1 : null,
   )
+  const [selectedTypeIndex, setSelectedTypeIndex] = useState(0)
   const [isShiny, setIsShiny] = useState(false)
   const [currentImage, setCurrentImage] = useState(
     isType ? null : `${IMAGE_BASE}/${pokemon.id}.png`,
@@ -59,6 +60,7 @@ export default function DetailScreen({ route, navigation }) {
       if (!genSegments) return
       setActiveSegment(index)
       setTypes(genSegments[index].types)
+      setSelectedTypeIndex(0)
     },
     [genSegments],
   )
@@ -85,6 +87,8 @@ export default function DetailScreen({ route, navigation }) {
         genSegments={genSegments}
         activeSegment={activeSegment}
         onSelectGenSegment={onSelectGenSegment}
+        selectedTypeIndex={selectedTypeIndex}
+        onSelectType={setSelectedTypeIndex}
       />
       <View
         style={{
@@ -92,7 +96,10 @@ export default function DetailScreen({ route, navigation }) {
           alignItems: 'flex-start',
           width: Dimensions.get('window').width,
         }}>
-        <TypeCalc typeArray={types} calculateByType={calculateByType} />
+        <TypeCalc
+          typeArray={types.length > 1 ? [types[selectedTypeIndex]] : types}
+          calculateByType={calculateByType}
+        />
       </View>
     </ScrollView>
   )

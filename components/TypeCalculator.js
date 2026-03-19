@@ -14,42 +14,17 @@ const TypeCalc = ({ typeArray, calculateByType }) => {
     const primaryEffectivenesses = typeMatrix[primaryIdx]
     const primaryReverseEffectivenesses = typeMatrix.map((row) => row[primaryIdx])
 
-    if (typeArray.length === 1) {
-      const strengths = []
-      const weaknesses = []
-      const resistances = []
-      const vulnerabilities = []
-
-      for (let i = 0; i < allTypes.length; i++) {
-        if (primaryEffectivenesses[i] >= 2) strengths.push(allTypes[i])
-        else if (primaryEffectivenesses[i] < 1) weaknesses.push(allTypes[i])
-
-        if (primaryReverseEffectivenesses[i] >= 2) vulnerabilities.push(allTypes[i])
-        else if (primaryReverseEffectivenesses[i] < 1) resistances.push(allTypes[i])
-      }
-
-      return { strengths, weaknesses, resistances, vulnerabilities }
-    }
-
-    // Dual type
-    const secondaryIdx = allTypes.indexOf(typeArray[1])
-    const secondaryEffectivenesses = typeMatrix[secondaryIdx]
-    const secondaryReverseEffectivenesses = typeMatrix.map((row) => row[secondaryIdx])
-
     const strengths = []
     const weaknesses = []
     const resistances = []
     const vulnerabilities = []
 
     for (let i = 0; i < allTypes.length; i++) {
-      const attackMultiplier = primaryEffectivenesses[i] * secondaryEffectivenesses[i]
-      if (attackMultiplier >= 2) strengths.push(allTypes[i])
-      else if (attackMultiplier < 0.5) weaknesses.push(allTypes[i])
+      if (primaryEffectivenesses[i] >= 2) strengths.push(allTypes[i])
+      else if (primaryEffectivenesses[i] < 1) weaknesses.push(allTypes[i])
 
-      const defenseMultiplier =
-        primaryReverseEffectivenesses[i] * secondaryReverseEffectivenesses[i]
-      if (defenseMultiplier >= 2) vulnerabilities.push(allTypes[i])
-      else if (defenseMultiplier < 1) resistances.push(allTypes[i])
+      if (primaryReverseEffectivenesses[i] >= 2) vulnerabilities.push(allTypes[i])
+      else if (primaryReverseEffectivenesses[i] < 1) resistances.push(allTypes[i])
     }
 
     return { strengths, weaknesses, resistances, vulnerabilities }
