@@ -15,7 +15,9 @@
       "checkAutomatically": "ON_LOAD"
     },
     "assetBundlePatterns": [
-      "**/*"
+      "assets/images/**/*",
+      "assets/utils/**/*",
+      "assets/styles/**/*"
     ],
     "ios": {
       "buildNumber": "1.0.2",
