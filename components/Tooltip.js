@@ -156,7 +156,7 @@ const styles = StyleSheet.create({
   },
   container: {
     position: 'absolute',
-    maxWidth: 240,
+    maxWidth: 300,
   },
   tooltip: {
     backgroundColor: '#333',

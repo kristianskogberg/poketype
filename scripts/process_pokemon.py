@@ -53,9 +53,9 @@ EXCLUDE_NAMES = {
 # Special form token overrides per species
 # Maps (speciesName, token) -> replacement string or None to skip
 SPECIES_TOKEN_OVERRIDES = {
-    ('zygarde', '10'): '10% Forme',
-    ('zygarde', '50'): '50% Forme',
-    ('zygarde', 'complete'): 'Complete Forme',
+    ('zygarde', '10'): '10%',
+    ('zygarde', '50'): '50%',
+    ('zygarde', 'complete'): 'Complete',
 }
 
 

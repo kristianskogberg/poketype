@@ -40,8 +40,6 @@ const Card = ({
   genSegments,
   activeSegment,
   onSelectGenSegment,
-  selectedTypeIndex,
-  onSelectType,
   height = 200,
   variant,
 }) => {
@@ -155,30 +153,11 @@ const Card = ({
             {pokemonName}
           </Text>
 
-          {onSelectType && types.length > 1 ? (
-            <View style={{ flexDirection: 'row', padding: 3 }}>
-              {types.map((type, i) => (
-                <Pressable
-                  key={type}
-                  onPress={() => onSelectType(i)}
-                  accessibilityLabel={type + ' Icon'}
-                  style={{
-                    opacity: i === selectedTypeIndex ? 1 : 0.5,
-                  }}>
-                  <Icon
-                    typeArray={[type]}
-                    calculateByType={() => onSelectType(i)}
-                  />
-                </Pressable>
-              ))}
-            </View>
-          ) : (
-            <Icon
-              style={[{ margin: 0 }]}
-              typeArray={types}
-              calculateByType={() => {}}
-            />
-          )}
+          <Icon
+            style={[{ margin: 0 }]}
+            typeArray={types}
+            calculateByType={() => {}}
+          />
 
           {genSegments ? (
             <View style={styles.genPills}>

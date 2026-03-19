@@ -11602,7 +11602,7 @@
       "isDefault": true,
       "displayName": "Zygarde",
       "forms": [
-        "50% Forme"
+        "50%"
       ]
     },
     {
@@ -11617,7 +11617,7 @@
       "isDefault": false,
       "displayName": "Zygarde",
       "forms": [
-        "10% Forme"
+        "10%"
       ]
     },
     {
@@ -11632,7 +11632,7 @@
       "isDefault": false,
       "displayName": "Zygarde",
       "forms": [
-        "Complete Forme"
+        "Complete"
       ]
     },
     {

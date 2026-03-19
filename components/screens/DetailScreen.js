@@ -89,8 +89,6 @@ export default function DetailScreen({ route, navigation }) {
         genSegments={genSegments}
         activeSegment={activeSegment}
         onSelectGenSegment={onSelectGenSegment}
-        selectedTypeIndex={selectedTypeIndex}
-        onSelectType={setSelectedTypeIndex}
       />
       <View
         style={{
@@ -99,7 +97,9 @@ export default function DetailScreen({ route, navigation }) {
           width: Dimensions.get('window').width,
         }}>
         <TypeCalc
-          typeArray={types.length > 1 ? [types[selectedTypeIndex]] : types}
+          typeArray={types}
+          selectedTypeIndex={selectedTypeIndex}
+          onSelectType={setSelectedTypeIndex}
           calculateByType={calculateByType}
         />
       </View>

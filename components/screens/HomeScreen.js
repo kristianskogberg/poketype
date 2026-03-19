@@ -60,12 +60,6 @@ export default function HomeScreen({ navigation }) {
   const blurTargetRef = useRef(null)
   const listRef = useRef(null)
 
-  useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      setSearch((prev) => (prev ? '' : prev))
-    })
-    return unsubscribe
-  }, [navigation])
 
   const onChangeSearch = useCallback((text) => {
     setSearch(text)
