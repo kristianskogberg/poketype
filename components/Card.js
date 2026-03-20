@@ -201,7 +201,7 @@ const Card = ({
           <Pressable
             style={[styles.typeImage, { height, justifyContent: 'center' }]}
             accessibilityLabel="type image">
-            <TypeImage type={types[0]} size={height} />
+            <TypeImage type={types[0]} size={height - 16} />
           </Pressable>
         )}
       </View>
@@ -228,7 +228,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 6,
   },
-  typeImage: { position: 'absolute', right: 0 },
+  typeImage: { position: 'absolute', right: 6 },
   textAndTypes: {
     flexDirection: 'column',
     paddingLeft: 10,
@@ -246,7 +246,7 @@ const styles = StyleSheet.create({
   genPill: {
     paddingHorizontal: 10,
     paddingVertical: 4,
-    borderRadius: BORDER_RADIUS_SM,
+    borderRadius: 999,
   },
   genPillText: {
     fontSize: 12,

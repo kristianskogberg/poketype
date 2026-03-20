@@ -1,4 +1,4 @@
-import { StyleSheet, View } from 'react-native'
+import { View } from 'react-native'
 
 import Bug from '../assets/images/type_images/bug.svg'
 import Dark from '../assets/images/type_images/dark.svg'
@@ -47,20 +47,10 @@ const TypeImage = ({ type, size = DEFAULT_SIZE }) => {
   if (!Component) return null
 
   return (
-    <View>
-      <View style={styles.icon} accessibilityLabel={type + ' type'}>
-        <Component width={size} height={size} />
-      </View>
+    <View accessibilityLabel={type + ' type'}>
+      <Component width={size} height={size} />
     </View>
   )
 }
 
 export default TypeImage
-
-const styles = StyleSheet.create({
-  icon: {
-    alignItems: 'flex-start',
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-  },
-})

@@ -46,15 +46,13 @@ const TypeCalc = ({
         const vulnerabilities = []
 
         for (let i = 0; i < allTypes.length; i++) {
-          // Attacking: best multiplier from either type
-          const bestAtk = Math.max(eff0[i], eff1[i])
-          if (bestAtk >= 2) strengths.push(allTypes[i])
-          else if (bestAtk < 1) weaknesses.push(allTypes[i])
+          // Attacking: either type super-effective OR either type resisted
+          if (eff0[i] >= 2 || eff1[i] >= 2) strengths.push(allTypes[i])
+          else if (eff0[i] < 1 || eff1[i] < 1) weaknesses.push(allTypes[i])
 
-          // Defending: multiply both types' defensive multipliers
-          const combinedDef = rev0[i] * rev1[i]
-          if (combinedDef >= 2) vulnerabilities.push(allTypes[i])
-          else if (combinedDef < 1) resistances.push(allTypes[i])
+          // Defending: either type vulnerable OR either type resistant
+          if (rev0[i] >= 2 || rev1[i] >= 2) vulnerabilities.push(allTypes[i])
+          else if (rev0[i] < 1 || rev1[i] < 1) resistances.push(allTypes[i])
         }
 
         return { strengths, weaknesses, resistances, vulnerabilities }
@@ -99,7 +97,7 @@ const TypeCalc = ({
       <Text style={[styles.tipType, { color: color[typeArray[0]] }]}>
         {capitalize(typeArray[0])}
       </Text>{' '}
-      or{' '}
+      and{' '}
       <Text style={[styles.tipType, { color: color[typeArray[1]] }]}>
         {capitalize(typeArray[1])}
       </Text>
@@ -124,7 +122,7 @@ const TypeCalc = ({
               style={[
                 styles.tab,
                 {
-                  backgroundColor: activeTab === i ? bgColor[type] : '#E0E0E0',
+                  backgroundColor: activeTab === i ? color[type] : '#E0E0E0',
                 },
               ]}>
               <Text
@@ -147,9 +145,7 @@ const TypeCalc = ({
                 styles.bothTabLeft,
                 {
                   backgroundColor:
-                    activeTab === BOTH_INDEX
-                      ? bgColor[typeArray[0]]
-                      : '#E0E0E0',
+                    activeTab === BOTH_INDEX ? color[typeArray[0]] : '#E0E0E0',
                 },
               ]}>
               <Text
@@ -171,9 +167,7 @@ const TypeCalc = ({
                 styles.bothTabRight,
                 {
                   backgroundColor:
-                    activeTab === BOTH_INDEX
-                      ? bgColor[typeArray[1]]
-                      : '#E0E0E0',
+                    activeTab === BOTH_INDEX ? color[typeArray[1]] : '#E0E0E0',
                 },
               ]}>
               <Text
@@ -193,49 +187,53 @@ const TypeCalc = ({
         </View>
       ) : null}
 
-      <View ref={strengthsRef}>
-        <Tooltip
-          style={styles.tooltipWrapper}
-          highlightRef={strengthsRef}
-          text={
-            <Text style={styles.tipText}>
-              {tooltipTypeName} attacks deal super-effective{' '}
-              <Text style={styles.tipPercentageSuperEffective}>(200%)</Text>{' '}
-              damage to these types
-            </Text>
-          }>
-          <Text style={styles.heading}>Strong against</Text>
-        </Tooltip>
+      {!isBoth && (
+        <>
+          <View ref={strengthsRef}>
+            <Tooltip
+              style={styles.tooltipWrapper}
+              highlightRef={strengthsRef}
+              text={
+                <Text style={styles.tipText}>
+                  {tooltipTypeName} attacks deal super-effective{' '}
+                  <Text style={styles.tipPercentageSuperEffective}>(200%)</Text>{' '}
+                  damage to these types
+                </Text>
+              }>
+              <Text style={styles.heading}>Strong against</Text>
+            </Tooltip>
 
-        <View style={styles.icon}>
-          <Icon typeArray={strengths} calculateByType={calculateByType} />
-        </View>
-      </View>
-      <View style={styles.lineContainer}>
-        <View style={styles.lineSeparator} />
-      </View>
+            <View style={styles.icon}>
+              <Icon typeArray={strengths} calculateByType={calculateByType} />
+            </View>
+          </View>
+          <View style={styles.lineContainer}>
+            <View style={styles.lineSeparator} />
+          </View>
 
-      <View ref={weaknessesRef}>
-        <Tooltip
-          style={styles.tooltipWrapper}
-          highlightRef={weaknessesRef}
-          text={
-            <Text style={styles.tipText}>
-              {tooltipTypeName} attacks deal reduced{' '}
-              <Text style={styles.tipPercentage}>(50%)</Text> damage to these
-              types
-            </Text>
-          }>
-          <Text style={styles.heading}>Weak against</Text>
-        </Tooltip>
+          <View ref={weaknessesRef}>
+            <Tooltip
+              style={styles.tooltipWrapper}
+              highlightRef={weaknessesRef}
+              text={
+                <Text style={styles.tipText}>
+                  {tooltipTypeName} attacks deal reduced{' '}
+                  <Text style={styles.tipPercentage}>(50%)</Text> damage to
+                  these types
+                </Text>
+              }>
+              <Text style={styles.heading}>Weak against</Text>
+            </Tooltip>
 
-        <View style={styles.icon}>
-          <Icon typeArray={weaknesses} calculateByType={calculateByType} />
-        </View>
-      </View>
-      <View style={styles.lineContainer}>
-        <View style={styles.lineSeparator} />
-      </View>
+            <View style={styles.icon}>
+              <Icon typeArray={weaknesses} calculateByType={calculateByType} />
+            </View>
+          </View>
+          <View style={styles.lineContainer}>
+            <View style={styles.lineSeparator} />
+          </View>
+        </>
+      )}
 
       <View ref={resistancesRef}>
         <Tooltip
@@ -330,7 +328,7 @@ const styles = StyleSheet.create({
   tab: {
     paddingHorizontal: 12,
     paddingVertical: 6,
-    borderRadius: BORDER_RADIUS_SM,
+    borderRadius: 999,
   },
   bothTab: {
     flexDirection: 'row',
@@ -340,12 +338,12 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
   },
   bothTabLeft: {
-    borderTopLeftRadius: BORDER_RADIUS_SM,
-    borderBottomLeftRadius: BORDER_RADIUS_SM,
+    borderTopLeftRadius: 999,
+    borderBottomLeftRadius: 999,
   },
   bothTabRight: {
-    borderTopRightRadius: BORDER_RADIUS_SM,
-    borderBottomRightRadius: BORDER_RADIUS_SM,
+    borderTopRightRadius: 999,
+    borderBottomRightRadius: 999,
   },
   tabText: {
     fontSize: 13,

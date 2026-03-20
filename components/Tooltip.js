@@ -7,12 +7,16 @@ import {
   Animated,
   StyleSheet,
   Dimensions,
+  Platform,
+  StatusBar,
 } from 'react-native'
 import { BORDER_RADIUS_SM, GAP_SM } from '../assets/utils/constants'
 import { textColor } from '../assets/utils/colors'
 
 const ARROW_SIZE = 6
 const OVERLAY_COLOR = 'rgba(0,0,0,0.5)'
+const STATUS_BAR_HEIGHT =
+  Platform.OS === 'android' ? StatusBar.currentHeight || 0 : 0
 
 const Tooltip = ({ text, style, highlightRef, children }) => {
   const [visible, setVisible] = useState(false)
@@ -24,11 +28,11 @@ const Tooltip = ({ text, style, highlightRef, children }) => {
 
   const open = useCallback(() => {
     iconRef.current?.measureInWindow((x, y, w, h) => {
-      setIconPos({ x, y, w, h })
+      setIconPos({ x, y: y + STATUS_BAR_HEIGHT, w, h })
 
       if (highlightRef?.current) {
         highlightRef.current.measureInWindow((hx, hy, hw, hh) => {
-          setHighlightPos({ x: hx, y: hy, w: hw, h: hh })
+          setHighlightPos({ x: hx, y: hy + STATUS_BAR_HEIGHT, w: hw, h: hh })
           setVisible(true)
           Animated.timing(fadeAnim, {
             toValue: 1,

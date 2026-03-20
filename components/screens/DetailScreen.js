@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react'
-import { StyleSheet, View, ScrollView, Dimensions } from 'react-native'
+import { StyleSheet, View, ScrollView, Dimensions, Platform, StatusBar } from 'react-native'
 import useReviewPrompt from '../../hooks/useReviewPrompt'
 import Card from '../Card'
 import TypeCalc from '../TypeCalculator'
@@ -69,7 +69,7 @@ export default function DetailScreen({ route, navigation }) {
   }, [pokemon])
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <Card
         pokemonName={name}
         image={currentImage}
@@ -103,5 +103,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
+    marginTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+  },
+  content: {
+    paddingBottom: 48,
   },
 })

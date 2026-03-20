@@ -6,6 +6,8 @@ import {
   View,
   FlatList,
   Pressable,
+  Platform,
+  StatusBar,
 } from 'react-native'
 import { BlurView, BlurTargetView } from 'expo-blur'
 import { Ionicons } from '@expo/vector-icons'
@@ -19,7 +21,7 @@ import Footer from '../Footer'
 
 const ITEM_HEIGHT = 150
 const ITEM_GAP = GAP
-const SEARCH_BAR_HEIGHT = 56
+const SEARCH_BAR_HEIGHT = 62
 const noop = () => {}
 
 // Type card items (pre-computed)
@@ -58,6 +60,7 @@ export default function HomeScreen({ navigation }) {
   const [search, setSearch] = useState('')
   const blurTargetRef = useRef(null)
   const listRef = useRef(null)
+  const searchRef = useRef(null)
 
   const onChangeSearch = useCallback((text) => {
     setSearch(text)
@@ -120,33 +123,32 @@ export default function HomeScreen({ navigation }) {
         />
       </BlurTargetView>
 
-      <View style={styles.searchOverlay}>
-        <View style={styles.searchRow}>
-          <BlurView
-            blurTarget={blurTargetRef}
-            intensity={48}
-            tint="prominent"
-            blurMethod="dimezisBlurView"
-            style={styles.searchInputBlur}>
-            <View style={styles.searchInputRow}>
-              <Ionicons name="search" size={18} color={textColor.grey} />
-              <TextInput
-                style={styles.searchInput}
-                placeholder="Search for a Pokémon or Type..."
-                placeholderTextColor={textColor.grey}
-                value={search}
-                onChangeText={onChangeSearch}
-                autoCorrect={false}
-              />
-              {search ? (
-                <Pressable onPress={() => setSearch('')} hitSlop={8}>
-                  <Ionicons name="close" size={18} color={textColor.grey} />
-                </Pressable>
-              ) : null}
-            </View>
-          </BlurView>
+      <BlurView
+        blurTarget={blurTargetRef}
+        intensity={48}
+        tint="prominent"
+        blurMethod="dimezisBlurView"
+        style={styles.searchOverlay}>
+        <View style={styles.searchInputRow}>
+          <Pressable onPress={() => searchRef.current?.focus()}>
+            <Ionicons name="search" size={18} color={textColor.grey} />
+          </Pressable>
+          <TextInput
+            ref={searchRef}
+            style={styles.searchInput}
+            placeholder="Search for a Pokémon or Type..."
+            placeholderTextColor={textColor.grey}
+            value={search}
+            onChangeText={onChangeSearch}
+            autoCorrect={false}
+          />
+          {search ? (
+            <Pressable onPress={() => setSearch('')} hitSlop={8}>
+              <Ionicons name="close" size={18} color={textColor.grey} />
+            </Pressable>
+          ) : null}
         </View>
-      </View>
+      </BlurView>
     </View>
   )
 }
@@ -155,30 +157,18 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
+    marginTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
   },
   searchOverlay: {
     position: 'absolute',
     top: 0,
-    left: 0,
-    right: 0,
-    paddingHorizontal: 12,
-    paddingTop: 8,
-    paddingBottom: 8,
-  },
-  searchInputBlur: {
-    flex: 1,
+    left: 12,
+    right: 12,
+    height: SEARCH_BAR_HEIGHT - 16,
+    justifyContent: 'center',
     borderRadius: BORDER_RADIUS,
     overflow: 'hidden',
     elevation: 12,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.9,
-    shadowRadius: 12,
-  },
-  searchRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: GAP_SM,
   },
   searchInputRow: {
     flexDirection: 'row',
@@ -188,6 +178,7 @@ const styles = StyleSheet.create({
   searchInput: {
     flex: 1,
     paddingVertical: 10,
+    paddingLeft: 8,
     fontSize: 16,
     color: textColor.black,
   },
