@@ -2,7 +2,7 @@
   "expo": {
     "name": "PokeType",
     "slug": "RNPokeType",
-    "version": "1.1.4",
+    "version": "2.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -25,7 +25,7 @@
       "bundleIdentifier": "com.pgkrsk.pokemontypecalculator"
     },
     "android": {
-      "versionCode": 5,
+      "versionCode": 8,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
@@ -41,8 +41,6 @@
         "projectId": "0260b078-b156-497c-b346-8712aa1ec946"
       }
     },
-    "plugins": [
-      "expo-image"
-    ]
+    "plugins": ["expo-image"]
   }
 }

@@ -1,7 +1,7 @@
 import { StyleSheet, View } from 'react-native'
 import { Image } from 'expo-image'
 
-function PokemonImage({ imageUrl, size = 180 }) {
+function PokemonImage({ imageUrl, size = 180, tintColor }) {
   return (
     <View style={[styles.container, { height: size }]}>
       <Image
@@ -12,6 +12,21 @@ function PokemonImage({ imageUrl, size = 180 }) {
         recyclingKey={imageUrl}
         transition={200}
       />
+      {tintColor && (
+        <Image
+          style={{
+            height: size,
+            width: size,
+            position: 'absolute',
+            tintColor,
+            opacity: 0.9,
+          }}
+          source={imageUrl}
+          contentFit="contain"
+          cachePolicy="memory-disk"
+          recyclingKey={imageUrl + '-tint'}
+        />
+      )}
     </View>
   )
 }

@@ -10,7 +10,12 @@ import PokemonImage from './PokemonImage'
 import commonStyles from '../assets/styles/commonStyles'
 import Icon from './TypeIcon'
 const { width } = Dimensions.get('window')
-import { bgColor, typeTextColor, textColor } from '../assets/utils/colors'
+import {
+  bgColor,
+  typeTextColor,
+  textColor,
+  color,
+} from '../assets/utils/colors'
 import {
   BORDER_RADIUS,
   BORDER_RADIUS_SM,
@@ -69,11 +74,11 @@ const Card = ({
       <View
         style={{
           position: 'absolute',
-          right: 6 + (height - 16) / 2 - height * 0.6,
-          top: height * 0.1,
+          right: 6 + (height - 16) / 2 - height * 0.7,
+          top: (height - height * 1.3) / 2,
           opacity: 0.25,
         }}>
-        <PokeBall fill={'white'} width={height * 1.2} height={height * 1.2} />
+        <PokeBall fill={'white'} width={height * 1.3} height={height * 1.3} />
       </View>
       <View style={styles.content}>
         <View style={styles.textAndTypes}>
@@ -195,7 +200,11 @@ const Card = ({
             style={[styles.pokemonImage, { height, justifyContent: 'center' }]}
             onPress={onImagePress}
             accessibilityLabel="pokemon image">
-            <PokemonImage imageUrl={image} size={height - 16} />
+            <PokemonImage
+              imageUrl={image}
+              size={height - 16}
+              // tintColor={color[typeColor]}
+            />
           </Pressable>
         ) : (
           <Pressable

@@ -308,7 +308,7 @@ const styles = StyleSheet.create({
   },
   tipText: {
     color: textColor.white,
-    fontSize: 13,
+    fontSize: 16,
   },
   tipType: {
     fontWeight: 'bold',

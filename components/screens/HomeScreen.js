@@ -115,6 +115,7 @@ export default function HomeScreen({ navigation }) {
           updateCellsBatchingPeriod={30}
           windowSize={5}
           removeClippedSubviews
+          overScrollMode="never"
           keyboardShouldPersistTaps="handled"
           ListEmptyComponent={
             <Text style={styles.emptyText}>Nothing found</Text>
